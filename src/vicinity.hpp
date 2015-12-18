@@ -27,24 +27,21 @@
 #include "common.hpp"
 
 #include "name.hpp"
-#include "selectors.hpp"
-#include "util/time.hpp"
 #include "management/nfd-local-control-header.hpp"
 #include "tag-host.hpp"
-#include "link.hpp"
 
 namespace ndn {
 
 class Data;
 
-/** @var const unspecified_duration_type DEFAULT_INTEREST_LIFETIME;
- *  @brief default value for InterestLifetime
+/** @var const unspecified_duration_type DEFAULT_VICINIYT_SCOPE;
+ *  @brief default value for the packet scope
  */
-const time::milliseconds DEFAULT_INTEREST_LIFETIME = time::milliseconds(4000);
+const uint32_t DEFAULT_VICINIYT_SCOPE = 2;
 
-/** @brief represents an Interest packet
+/** @brief represents a Vicinity packet
  */
-class Interest : public TagHost, public enable_shared_from_this<Interest>
+class Vicinity : public TagHost, public enable_shared_from_this<Vicinity>
 {
 public:
   class Error : public tlv::Error
@@ -57,34 +54,28 @@ public:
     }
   };
 
-  /** @brief Create a new Interest with an empty name (`ndn:/`)
-   *  @warning In certain contexts that use Interest::shared_from_this(), Interest must be created
-   *           using `make_shared`. Otherwise, .shared_from_this() will throw an exception.
-   */
-  Interest();
-
-  /** @brief Create a new Interest with the given name
-   *  @param name The name for the interest.
+  /** @brief Create a new Vicinity with the given name
+   *  @param name The name for the vicinity probe.
    *  @note This constructor allows implicit conversion from Name.
-   *  @warning In certain contexts that use Interest::shared_from_this(), Interest must be created
+   *  @warning In certain contexts that use Vicinity::shared_from_this(), Vicinity must be created
    *           using `make_shared`. Otherwise, .shared_from_this() will throw an exception.
    */
-  Interest(const Name& name);
+  Vicinity(const Name& name);
 
-  /** @brief Create a new Interest with the given name and interest lifetime
-   *  @param name             The name for the interest.
-   *  @param interestLifetime The interest lifetime in time::milliseconds, or -1 for none.
-   *  @warning In certain contexts that use Interest::shared_from_this(), Interest must be created
+  /** @brief Create a new Vicinity with the given name and vicinity scope
+   *  @param name  The name for the vicinity probe.
+   *  @param scope The vicinity scope.
+   *  @warning In certain contexts that use Vicinity::shared_from_this(), Vicinity must be created
    *           using `make_shared`. Otherwise, .shared_from_this() will throw an exception.
    */
-  Interest(const Name& name, const time::milliseconds& interestLifetime);
+  Vicinity(const Name& name, uint32_t scope);
 
   /** @brief Create from wire encoding
-   *  @warning In certain contexts that use Interest::shared_from_this(), Interest must be created
+   *  @warning In certain contexts that use Vicinity::shared_from_this(), Vicinity must be created
    *           using `make_shared`. Otherwise, .shared_from_this() will throw an exception.
    */
   explicit
-  Interest(const Block& wire);
+  Vicinity(const Block& wire);
 
   /**
    * @brief Fast encoding or block size estimation
@@ -117,84 +108,14 @@ public:
   /**
    * @brief Encode the name according to the NDN URI Scheme
    *
-   * If there are interest selectors, this method will append "?" and add the selectors as
+   * If there are vicinity selectors, this method will append "?" and add the selectors as
    * a query string.  For example, "/test/name?ndn.ChildSelector=1"
    */
   std::string
   toUri() const;
 
-public: // Link and forwarding hint
-
-   /**
-   * @brief Check whether the Interest contains a Link object
-   * @return True if there is a link object, otherwise false
-   */
-  bool
-  hasLink() const;
-
-  /**
-   * @brief Get the link object for this interest
-   * @return The link object if there is one contained in this interest
-   * @throws Interest::Error if there is no link object contained in the interest
-   */
-  Link
-  getLink() const;
-
-  /**
-   * @brief Set the link object for this interest
-   * @param link The link object that will be included in this interest (in wire format)
-   * @post !hasSelectedDelegation()
-   */
-  void
-  setLink(const Block& link);
-
-  /**
-   *@brief Reset the wire format of the given interest and the contained link
-   */
-  void
-  unsetLink();
-
-  /**
-   * @brief Check whether the Interest includes a selected delegation
-   * @return True if there is a selected delegation, otherwise false
-   */
-  bool
-  hasSelectedDelegation() const;
-
-  /**
-   * @brief Get the name of the selected delegation
-   * @return The name of the selected delegation
-   * @throw Error SelectedDelegation is not set.
-   */
-  Name
-  getSelectedDelegation() const;
-
-  /**
-   * @brief Set the selected delegation
-   * @param delegationName The name of the selected delegation
-   * @throw Error Link is not set.
-   * @throw std::invalid_argument @p delegationName does not exist in Link.
-   */
-  void
-  setSelectedDelegation(const Name& delegationName);
-
-  /**
-   * @brief Set the selected delegation
-   * @param delegation The index of the selected delegation
-   * @throw Error Link is not set.
-   * @throw std::out_of_range @p delegationIndex is out of bound in Link.
-   */
-  void
-  setSelectedDelegation(size_t delegationIndex);
-
-   /**
-   * @brief Unset the selected delegation
-   */
-  void
-  unsetSelectedDelegation();
-
 public: // matching
-  /** @brief Check if Interest, including selectors, matches the given @p name
+  /** @brief Check if Vicinity, including selectors, matches the given @p name
    *  @param name The name to be matched. If this is a Data name, it shall contain the
    *              implicit digest component
    */
@@ -202,11 +123,9 @@ public: // matching
   matchesName(const Name& name) const;
 
   /**
-   * @brief Check if Interest can be satisfied by @p data.
+   * @brief Check if Vicinity can be satisfied by @p data.
    *
-   * This method considers Name, MinSuffixComponents, MaxSuffixComponents,
-   * PublisherPublicKeyLocator, and Exclude.
-   * This method does not consider ChildSelector and MustBeFresh.
+   * This method considers Name
    *
    * @todo recognize implicit digest component
    */
@@ -220,7 +139,7 @@ public: // Name and guiders
     return m_name;
   }
 
-  Interest&
+  Vicinity&
   setName(const Name& name)
   {
     m_name = name;
@@ -228,52 +147,19 @@ public: // Name and guiders
     return *this;
   }
 
-  const time::milliseconds&
-  getInterestLifetime() const
+  uint32_t
+  getScope()
   {
-    return m_interestLifetime;
+    return m_scope;
   }
 
-  Interest&
-  setInterestLifetime(const time::milliseconds& interestLifetime)
+  Vicinity&
+  setScope(uint32_t scope)
   {
-    m_interestLifetime = interestLifetime;
+    m_scope = scope;
     m_wire.reset();
     return *this;
   }
-
-  /** @brief Check if Nonce set
-   */
-  bool
-  hasNonce() const
-  {
-    return m_nonce.hasWire();
-  }
-
-  /** @brief Get Interest's nonce
-   *
-   *  If nonce was not set before this call, it will be automatically assigned to a random value
-   */
-  uint32_t
-  getNonce() const;
-
-  /** @brief Set Interest's nonce
-   *
-   *  If wire format already exists, this call simply replaces nonce in the
-   *  existing wire format, without resetting and recreating it.
-   */
-  Interest&
-  setNonce(uint32_t nonce);
-
-  /** @brief Refresh nonce
-   *
-   *  It's guaranteed that new nonce value differs from the existing one.
-   *
-   *  If nonce is already set, it will be updated to a different random value.
-   *  If nonce is not set, this method does nothing.
-   */
-  void
-  refreshNonce();
 
 public: // local control header
   nfd::LocalControlHeader&
@@ -294,11 +180,11 @@ public: // local control header
     return getLocalControlHeader().getIncomingFaceId();
   }
 
-  Interest&
+  Vicinity&
   setIncomingFaceId(uint64_t incomingFaceId)
   {
     getLocalControlHeader().setIncomingFaceId(incomingFaceId);
-    // ! do not reset Interest's wire !
+    // ! do not reset Vicinity's wire !
     return *this;
   }
 
@@ -308,143 +194,31 @@ public: // local control header
     return getLocalControlHeader().getNextHopFaceId();
   }
 
-  Interest&
+  Vicinity&
   setNextHopFaceId(uint64_t nextHopFaceId)
   {
     getLocalControlHeader().setNextHopFaceId(nextHopFaceId);
-    // ! do not reset Interest's wire !
-    return *this;
-  }
-
-public: // Selectors
-  /**
-   * @return true if Interest has any selector present
-   */
-  bool
-  hasSelectors() const
-  {
-    return !m_selectors.empty();
-  }
-
-  const Selectors&
-  getSelectors() const
-  {
-    return m_selectors;
-  }
-
-  Interest&
-  setSelectors(const Selectors& selectors)
-  {
-    m_selectors = selectors;
-    m_wire.reset();
-    return *this;
-  }
-
-  int
-  getMinSuffixComponents() const
-  {
-    return m_selectors.getMinSuffixComponents();
-  }
-
-  Interest&
-  setMinSuffixComponents(int minSuffixComponents)
-  {
-    m_selectors.setMinSuffixComponents(minSuffixComponents);
-    m_wire.reset();
-    return *this;
-  }
-
-  int
-  getMaxSuffixComponents() const
-  {
-    return m_selectors.getMaxSuffixComponents();
-  }
-
-  Interest&
-  setMaxSuffixComponents(int maxSuffixComponents)
-  {
-    m_selectors.setMaxSuffixComponents(maxSuffixComponents);
-    m_wire.reset();
-    return *this;
-  }
-
-  const KeyLocator&
-  getPublisherPublicKeyLocator() const
-  {
-    return m_selectors.getPublisherPublicKeyLocator();
-  }
-
-  Interest&
-  setPublisherPublicKeyLocator(const KeyLocator& keyLocator)
-  {
-    m_selectors.setPublisherPublicKeyLocator(keyLocator);
-    m_wire.reset();
-    return *this;
-  }
-
-  const Exclude&
-  getExclude() const
-  {
-    return m_selectors.getExclude();
-  }
-
-  Interest&
-  setExclude(const Exclude& exclude)
-  {
-    m_selectors.setExclude(exclude);
-    m_wire.reset();
-    return *this;
-  }
-
-  int
-  getChildSelector() const
-  {
-    return m_selectors.getChildSelector();
-  }
-
-  Interest&
-  setChildSelector(int childSelector)
-  {
-    m_selectors.setChildSelector(childSelector);
-    m_wire.reset();
-    return *this;
-  }
-
-  int
-  getMustBeFresh() const
-  {
-    return m_selectors.getMustBeFresh();
-  }
-
-  Interest&
-  setMustBeFresh(bool mustBeFresh)
-  {
-    m_selectors.setMustBeFresh(mustBeFresh);
-    m_wire.reset();
+    // ! do not reset Vicinity's wire !
     return *this;
   }
 
 public: // EqualityComparable concept
   bool
-  operator==(const Interest& other) const
+  operator==(const Vicinity& other) const
   {
     return wireEncode() == other.wireEncode();
   }
 
   bool
-  operator!=(const Interest& other) const
+  operator!=(const Vicinity& other) const
   {
     return !(*this == other);
   }
 
 private:
   Name m_name;
-  Selectors m_selectors;
-  mutable Block m_nonce;
-  time::milliseconds m_interestLifetime;
+  uint32_t m_scope;
 
-  mutable Block m_link;
-  size_t m_selectedDelegationIndex;
   mutable Block m_wire;
 
   nfd::LocalControlHeader m_localControlHeader;
@@ -452,10 +226,10 @@ private:
 };
 
 std::ostream&
-operator<<(std::ostream& os, const Interest& interest);
+operator<<(std::ostream& os, const Vicinity& vicinity);
 
 inline std::string
-Interest::toUri() const
+Vicinity::toUri() const
 {
   std::ostringstream os;
   os << *this;
