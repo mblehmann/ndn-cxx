@@ -53,28 +53,28 @@ Vicinity::Vicinity(const Block& wire)
 bool
 Vicinity::matchesName(const Name& name) const
 {
-  if (name.size() < m_name.size())
-    return false;
+  // if (name.size() < m_name.size())
+  //   return false;
 
-  if (!m_name.isPrefixOf(name))
-    return false;
+  // if (!m_name.isPrefixOf(name))
+  //   return false;
 
-  if (getMinSuffixComponents() >= 0 &&
-      // name must include implicit digest
-      !(name.size() - m_name.size() >= static_cast<size_t>(getMinSuffixComponents())))
-    return false;
+  // if (getMinSuffixComponents() >= 0 &&
+  //     // name must include implicit digest
+  //     !(name.size() - m_name.size() >= static_cast<size_t>(getMinSuffixComponents())))
+  //   return false;
 
-  if (getMaxSuffixComponents() >= 0 &&
-      // name must include implicit digest
-      !(name.size() - m_name.size() <= static_cast<size_t>(getMaxSuffixComponents())))
-    return false;
+  // if (getMaxSuffixComponents() >= 0 &&
+  //     // name must include implicit digest
+  //     !(name.size() - m_name.size() <= static_cast<size_t>(getMaxSuffixComponents())))
+  //   return false;
 
-  if (!getExclude().empty() &&
-      name.size() > m_name.size() &&
-      getExclude().isExcluded(name[m_name.size()]))
-    return false;
+  // if (!getExclude().empty() &&
+  //     name.size() > m_name.size() &&
+  //     getExclude().isExcluded(name[m_name.size()]))
+  //   return false;
 
-  return true;
+  // return true;
 }
 
 bool
@@ -206,72 +206,72 @@ Vicinity::wireEncode<encoding::EstimatorTag>(EncodingImpl<encoding::EstimatorTag
 const Block&
 Vicinity::wireEncode() const
 {
-  if (m_wire.hasWire())
-    return m_wire;
+  // if (m_wire.hasWire())
+  //   return m_wire;
 
-  EncodingEstimator estimator;
-  size_t estimatedSize = wireEncode(estimator);
+  // EncodingEstimator estimator;
+  // size_t estimatedSize = wireEncode(estimator);
 
-  EncodingBuffer buffer(estimatedSize, 0);
-  wireEncode(buffer);
+  // EncodingBuffer buffer(estimatedSize, 0);
+  // wireEncode(buffer);
 
-  // to ensure that Nonce block points to the right memory location
-  const_cast<Vicinity*>(this)->wireDecode(buffer.block());
+  // // to ensure that Nonce block points to the right memory location
+  // const_cast<Vicinity*>(this)->wireDecode(buffer.block());
 
-  return m_wire;
+  // return m_wire;
 }
 
 void
 Vicinity::wireDecode(const Block& wire)
 {
-  m_wire = wire;
-  m_wire.parse();
+  // m_wire = wire;
+  // m_wire.parse();
 
-  // Interest ::= INTEREST-TYPE TLV-LENGTH
-  //                Name
-  //                Scope
-  //                Selectors?
+  // // Interest ::= INTEREST-TYPE TLV-LENGTH
+  // //                Name
+  // //                Scope
+  // //                Selectors?
 
-  if (m_wire.type() != tlv::Interest)
-    BOOST_THROW_EXCEPTION(Error("Unexpected TLV number when decoding Interest"));
+  // if (m_wire.type() != tlv::Interest)
+  //   BOOST_THROW_EXCEPTION(Error("Unexpected TLV number when decoding Interest"));
 
-  // Name
-  m_name.wireDecode(m_wire.get(tlv::Name));
+  // // Name
+  // m_name.wireDecode(m_wire.get(tlv::Name));
 
-  // Scope
-  Block::element_const_iterator val = m_wire.find(tlv::VicinityScope);
-  if (val != m_wire.elements_end())
-    {
-      m_scope = uint32_t(readNonNegativeInteger(*val));
-    }
-  else
-    {
-      m_scope = DEFAULT_VICINIYT_SCOPE;
-    }
+  // // Scope
+  // Block::element_const_iterator val = m_wire.find(tlv::VicinityScope);
+  // if (val != m_wire.elements_end())
+  //   {
+  //     m_scope = uint32_t(readNonNegativeInteger(*val));
+  //   }
+  // else
+  //   {
+  //     m_scope = DEFAULT_VICINIYT_SCOPE;
+  //   }
 
-  // Selectors
-  val = m_wire.find(tlv::Selectors);
-  if (val != m_wire.elements_end())
-    {
-      m_selectors.wireDecode(*val);
-    }
-  else
-    m_selectors = Selectors();
+  // // Selectors
+  // val = m_wire.find(tlv::Selectors);
+  // if (val != m_wire.elements_end())
+  //   {
+  //     m_selectors.wireDecode(*val);
+  //   }
+  // else
+  //   m_selectors = Selectors();
 
 }
 
 std::ostream&
 operator<<(std::ostream& os, const Vicinity& vicinity)
 {
-  os << vicinity.getName();
+  // os << vicinity.getName();
 
-  char delim = '?';
+  // char delim = '?';
 
-  if (vicinity.getScope() >= 0
-      && vicinity.getScope() != DEFAULT_INTEREST_LIFETIME) {
-    os << delim << "ndn.InterestLifetime=" << vicinity.getScope().count();
-    delim = '&';
-  }
+  // if (vicinity.getScope() >= 0
+  //     && vicinity.getScope() != DEFAULT_INTEREST_LIFETIME) {
+  //   os << delim << "ndn.InterestLifetime=" << vicinity.getScope().count();
+  //   delim = '&';
+  // }
 
   // if (interest.getMinSuffixComponents() >= 0) {
   //   os << delim << "ndn.MinSuffixComponents=" << interest.getMinSuffixComponents();
