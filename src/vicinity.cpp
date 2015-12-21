@@ -74,7 +74,7 @@ Vicinity::matchesName(const Name& name) const
   //     getExclude().isExcluded(name[m_name.size()]))
   //   return false;
 
-  // return true;
+  return true;
 }
 
 bool
@@ -158,14 +158,14 @@ Vicinity::matchesData(const Data& data) const
 //     }
 //   }
 
-//   return true;
-// }
+  return true;
+}
 
-// template<encoding::Tag TAG>
-// size_t
-// Vicinity::wireEncode(EncodingImpl<TAG>& encoder) const
-// {
-//   size_t totalLength = 0;
+template<encoding::Tag TAG>
+size_t
+Vicinity::wireEncode(EncodingImpl<TAG>& encoder) const
+{
+  size_t totalLength = 0;
 
 //   // Vicinity ::= VICINITY-TYPE TLV-LENGTH
 //   //                Name
@@ -194,7 +194,7 @@ Vicinity::matchesData(const Data& data) const
 
 //   totalLength += encoder.prependVarNumber(totalLength);
 //   totalLength += encoder.prependVarNumber(tlv::Vicinity);
-//   return totalLength;
+  return totalLength;
 }
 
 template size_t
