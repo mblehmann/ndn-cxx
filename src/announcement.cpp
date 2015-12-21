@@ -201,7 +201,7 @@ Announcement::wireDecode(const Block& wire)
   m_nonce = m_wire.get(tlv::Nonce);
 
   // AnnouncementTimeout
-  val = m_wire.find(tlv::AnnouncementTimeout);
+  Block::element_const_iterator val = m_wire.find(tlv::AnnouncementTimeout);
   if (val != m_wire.elements_end())
     {
       m_announcementTimeout = time::milliseconds(readNonNegativeInteger(*val));
