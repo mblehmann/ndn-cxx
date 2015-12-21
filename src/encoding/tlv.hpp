@@ -88,6 +88,9 @@ enum {
   LinkDelegation = 31,
   SelectedDelegation = 32,
 
+  Announcement = 40,
+  AnnouncementTimeout = 41,
+
   AppPrivateBlock1 = 128,
   AppPrivateBlock2 = 32767
 };

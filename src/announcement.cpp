@@ -104,21 +104,6 @@ Announcement::matchesName(const Name& name) const
   if (!m_name.isPrefixOf(name))
     return false;
 
-  if (getMinSuffixComponents() >= 0 &&
-      // name must include implicit digest
-      !(name.size() - m_name.size() >= static_cast<size_t>(getMinSuffixComponents())))
-    return false;
-
-  if (getMaxSuffixComponents() >= 0 &&
-      // name must include implicit digest
-      !(name.size() - m_name.size() <= static_cast<size_t>(getMaxSuffixComponents())))
-    return false;
-
-  if (!getExclude().empty() &&
-      name.size() > m_name.size() &&
-      getExclude().isExcluded(name[m_name.size()]))
-    return false;
-
   return true;
 }
 
@@ -175,7 +160,7 @@ Announcement::wireEncode() const
   wireEncode(buffer);
 
   // to ensure that Nonce block points to the right memory location
-  const_cast<Interest*>(this)->wireDecode(buffer.block());
+  const_cast<Announcement*>(this)->wireDecode(buffer.block());
 
   return m_wire;
 }
