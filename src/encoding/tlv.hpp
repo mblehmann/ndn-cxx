@@ -91,6 +91,13 @@ enum {
   Announcement = 40,
   AnnouncementTimeout = 41,
 
+  /* added by prlanzarin */
+  Hint = 42,
+  HintScope = 43, 
+  Vicinity = 44,
+  // Vicinity fields to be added
+  ReplicationSelectors = 45,
+
   AppPrivateBlock1 = 128,
   AppPrivateBlock2 = 32767
 };
