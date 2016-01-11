@@ -226,10 +226,10 @@ private:
 };
 
 std::ostream&
-operator<<(std::ostream& os, const Vicinity& vicinity);
+operator<<(std::ostream& os, const VicinityData& vicinityData);
 
 inline std::string
-Vicinity::toUri() const
+VicinityData::toUri() const
 {
   std::ostringstream os;
   os << *this;
