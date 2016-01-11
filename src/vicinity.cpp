@@ -218,7 +218,7 @@ Vicinity::wireEncode() const
   // // to ensure that Nonce block points to the right memory location
   // const_cast<Vicinity*>(this)->wireDecode(buffer.block());
 
-  // return m_wire;
+  return m_wire;
 }
 
 void
