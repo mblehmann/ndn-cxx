@@ -95,8 +95,9 @@ enum {
   Hint = 42,
   HintScope = 43, 
   Vicinity = 44,
+  VicinityData = 45,
   // Vicinity fields to be added
-  ReplicationSelectors = 45,
+  ReplicationSelectors = 46,
 
   AppPrivateBlock1 = 128,
   AppPrivateBlock2 = 32767

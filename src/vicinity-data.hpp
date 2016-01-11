@@ -41,7 +41,7 @@ const uint32_t DEFAULT_VICINIYT_SCOPE = 2;
 
 /** @brief represents a Vicinity packet
  */
-class VicinityData : public TagHost, public enable_shared_from_this<Vicinity>
+class VicinityData : public TagHost, public enable_shared_from_this<VicinityData>
 {
 public:
   class Error : public tlv::Error
