@@ -37,7 +37,7 @@ class Data;
 /** @var const unspecified_duration_type DEFAULT_VICINIYT_SCOPE;
  *  @brief default value for the packet scope
  */
-const uint32_t DEFAULT_VICINIYT_SCOPE = 2;
+const uint32_t DEFAULT_VICINITY_SCOPE = 2;
 
 /** @brief represents a Vicinity packet
  */

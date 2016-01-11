@@ -34,11 +34,6 @@ namespace ndn {
 
 class Data;
 
-/** @var const unspecified_duration_type DEFAULT_VICINIYT_SCOPE;
- *  @brief default value for the packet scope
- */
-const uint32_t DEFAULT_VICINIYT_SCOPE = 2;
-
 /** @brief represents a Vicinity packet
  */
 class VicinityData : public TagHost, public enable_shared_from_this<VicinityData>
