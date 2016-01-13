@@ -43,6 +43,10 @@ ForwarderStatus::ForwarderStatus()
   , m_nCsEntries(0)
   , m_nInInterests(0)
   , m_nInDatas(0)
+  , m_nInAnnouncements(0)
+  , m_nInHints(0)
+  , m_nInVicinities(0)
+  , m_nInVicinityDatas(0)
   , m_nOutInterests(0)
   , m_nOutDatas(0)
 {
@@ -63,6 +67,14 @@ ForwarderStatus::wireEncode(EncodingImpl<TAG>& encoder) const
                                                 m_nOutDatas);
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NOutInterests,
                                                 m_nOutInterests);
+  totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NInVicinityDatas,
+                                                m_nInVicinityDatas);
+  totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NInVicinities,
+                                                m_nInVicinities);
+  totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NInHints,
+                                                m_nInHints);
+  totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NInAnnouncements,
+                                                m_nInAnnouncements);
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NInDatas,
                                                 m_nInDatas);
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NInInterests,
@@ -202,6 +214,38 @@ ForwarderStatus::wireDecode(const Block& block)
     BOOST_THROW_EXCEPTION(Error("missing required NInDatas field"));
   }
 
+  if (val != m_wire.elements_end() && val->type() == tlv::nfd::NInAnnouncements) {
+    m_nInAnnouncements = static_cast<uint64_t>(readNonNegativeInteger(*val));
+    ++val;
+  }
+  else {
+    BOOST_THROW_EXCEPTION(Error("missing required NInAnnouncements field"));
+  }
+
+  if (val != m_wire.elements_end() && val->type() == tlv::nfd::NInHints) {
+    m_nInHints = static_cast<uint64_t>(readNonNegativeInteger(*val));
+    ++val;
+  }
+  else {
+    BOOST_THROW_EXCEPTION(Error("missing required NInHints field"));
+  }
+
+  if (val != m_wire.elements_end() && val->type() == tlv::nfd::NInVicinities) {
+    m_nInVicinities = static_cast<uint64_t>(readNonNegativeInteger(*val));
+    ++val;
+  }
+  else {
+    BOOST_THROW_EXCEPTION(Error("missing required NInVicinities field"));
+  }
+
+  if (val != m_wire.elements_end() && val->type() == tlv::nfd::NInVicinityDatas) {
+    m_nInVicinityDatas = static_cast<uint64_t>(readNonNegativeInteger(*val));
+    ++val;
+  }
+  else {
+    BOOST_THROW_EXCEPTION(Error("missing required NInVicinityDatas field"));
+  }
+
   if (val != m_wire.elements_end() && val->type() == tlv::nfd::NOutInterests) {
     m_nOutInterests = static_cast<uint64_t>(readNonNegativeInteger(*val));
     ++val;
@@ -296,6 +340,38 @@ ForwarderStatus::setNInDatas(uint64_t nInDatas)
 {
   m_wire.reset();
   m_nInDatas = nInDatas;
+  return *this;
+}
+
+ForwarderStatus&
+ForwarderStatus::setNInAnnouncements(uint64_t nInAnnouncements)
+{
+  m_wire.reset();
+  m_nInAnnouncements = nInAnnouncements;
+  return *this;
+}
+
+ForwarderStatus&
+ForwarderStatus::setNInHints(uint64_t nInHints)
+{
+  m_wire.reset();
+  m_nInHints = nInHints;
+  return *this;
+}
+
+ForwarderStatus&
+ForwarderStatus::setNInVicinities(uint64_t nInVicinities)
+{
+  m_wire.reset();
+  m_nInVicinities = nInVicinities;
+  return *this;
+}
+
+ForwarderStatus&
+ForwarderStatus::setNInVicinityDatas(uint64_t nInVicinityDatas)
+{
+  m_wire.reset();
+  m_nInVicinityDatas = nInVicinityDatas;
   return *this;
 }
 

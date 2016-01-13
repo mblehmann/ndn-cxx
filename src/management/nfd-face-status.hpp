@@ -94,6 +94,42 @@ public: // getters & setters
   setNInDatas(uint64_t nInDatas);
 
   uint64_t
+  getNInAnnouncements() const
+  {
+    return m_nInAnnouncements;
+  }
+
+  FaceStatus&
+  setNInAnnouncements(uint64_t nInAnnouncements);
+
+  uint64_t
+  getNInHints() const
+  {
+    return m_nInHints;
+  }
+
+  FaceStatus&
+  setNInHints(uint64_t nInHints);
+
+  uint64_t
+  getNInVicinities() const
+  {
+    return m_nInVicinities;
+  }
+
+  FaceStatus&
+  setNInVicinities(uint64_t nInVicinities);
+
+  uint64_t
+  getNInVicinityDatas() const
+  {
+    return m_nInVicinityDatas;
+  }
+
+  FaceStatus&
+  setNInVicinityDatas(uint64_t nInVicinityDatas);
+
+  uint64_t
   getNOutInterests() const
   {
     return m_nOutInterests;
@@ -138,6 +174,10 @@ private:
   bool m_hasExpirationPeriod;
   uint64_t m_nInInterests;
   uint64_t m_nInDatas;
+  uint64_t m_nInAnnouncements;
+  uint64_t m_nInHints;
+  uint64_t m_nInVicinities;
+  uint64_t m_nInVicinityDatas;
   uint64_t m_nOutInterests;
   uint64_t m_nOutDatas;
   uint64_t m_nInBytes;

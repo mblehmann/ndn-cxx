@@ -77,6 +77,11 @@ enum {
   NInBytes      = 148,
   NOutBytes     = 149,
 
+  NInAnnouncements = 151,
+  NInHints         = 152,
+  NInVicinities    = 153,
+  NInVicinityDatas = 154,
+
   // FIB Management
   FibEntry      = 128,
   NextHopRecord = 129,
