@@ -33,6 +33,10 @@ BOOST_CONCEPT_ASSERT((WireDecodable<VicinityData>));
 static_assert(std::is_base_of<tlv::Error, VicinityData::Error>::value,
               "VicinityData::Error must inherit from tlv::Error");
 
+VicinityData::VicinityData()
+{
+}
+
 VicinityData::VicinityData(const Name& name)
   : m_name(name)
   , m_scope(0)

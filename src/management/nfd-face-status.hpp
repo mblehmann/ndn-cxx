@@ -148,6 +148,42 @@ public: // getters & setters
   setNOutDatas(uint64_t nOutDatas);
 
   uint64_t
+  getNOutAnnouncements() const
+  {
+    return m_nOutAnnouncements;
+  }
+
+  FaceStatus&
+  setNOutAnnouncements(uint64_t nOutAnnouncements);
+
+  uint64_t
+  getNOutHints() const
+  {
+    return m_nOutHints;
+  }
+
+  FaceStatus&
+  setNOutHints(uint64_t nOutHints);
+
+  uint64_t
+  getNOutVicinities() const
+  {
+    return m_nOutVicinities;
+  }
+
+  FaceStatus&
+  setNOutVicinities(uint64_t nOutVicinities);
+
+  uint64_t
+  getNOutVicinityDatas() const
+  {
+    return m_nOutVicinityDatas;
+  }
+
+  FaceStatus&
+  setNOutVicinityDatas(uint64_t nOutVicinityDatas);
+
+  uint64_t
   getNInBytes() const
   {
     return m_nInBytes;
@@ -180,6 +216,10 @@ private:
   uint64_t m_nInVicinityDatas;
   uint64_t m_nOutInterests;
   uint64_t m_nOutDatas;
+  uint64_t m_nOutAnnouncements;
+  uint64_t m_nOutHints;
+  uint64_t m_nOutVicinities;
+  uint64_t m_nOutVicinityDatas;
   uint64_t m_nInBytes;
   uint64_t m_nOutBytes;
 

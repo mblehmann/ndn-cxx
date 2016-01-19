@@ -49,6 +49,8 @@ public:
     }
   };
 
+  VicinityData();
+
   /** @brief Create a new Vicinity with the given name
    *  @param name The name for the vicinity probe.
    *  @note This constructor allows implicit conversion from Name.

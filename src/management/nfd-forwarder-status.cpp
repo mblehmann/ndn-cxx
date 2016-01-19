@@ -49,6 +49,10 @@ ForwarderStatus::ForwarderStatus()
   , m_nInVicinityDatas(0)
   , m_nOutInterests(0)
   , m_nOutDatas(0)
+  , m_nOutAnnouncements(0)
+  , m_nOutHints(0)
+  , m_nOutVicinities(0)
+  , m_nOutVicinityDatas(0)
 {
 }
 
@@ -63,6 +67,14 @@ ForwarderStatus::wireEncode(EncodingImpl<TAG>& encoder) const
 {
   size_t totalLength = 0;
 
+  totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NOutVicinityDatas,
+                                                m_nOutVicinityDatas);
+  totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NOutVicinities,
+                                                m_nOutVicinities);
+  totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NOutHints,
+                                                m_nOutHints);
+  totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NOutAnnouncements,
+                                                m_nOutAnnouncements);
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NOutDatas,
                                                 m_nOutDatas);
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NOutInterests,
@@ -261,6 +273,39 @@ ForwarderStatus::wireDecode(const Block& block)
   else {
     BOOST_THROW_EXCEPTION(Error("missing required NOutDatas field"));
   }
+
+  if (val != m_wire.elements_end() && val->type() == tlv::nfd::NOutAnnouncements) {
+    m_nOutAnnouncements = static_cast<uint64_t>(readNonNegativeInteger(*val));
+    ++val;
+  }
+  else {
+    BOOST_THROW_EXCEPTION(Error("missing required NOutAnnouncements field"));
+  }
+
+  if (val != m_wire.elements_end() && val->type() == tlv::nfd::NOutHints) {
+    m_nOutHints = static_cast<uint64_t>(readNonNegativeInteger(*val));
+    ++val;
+  }
+  else {
+    BOOST_THROW_EXCEPTION(Error("missing required NOutHints field"));
+  }
+
+  if (val != m_wire.elements_end() && val->type() == tlv::nfd::NOutVicinities) {
+    m_nOutVicinities = static_cast<uint64_t>(readNonNegativeInteger(*val));
+    ++val;
+  }
+  else {
+    BOOST_THROW_EXCEPTION(Error("missing required NOutVicinities field"));
+  }
+
+  if (val != m_wire.elements_end() && val->type() == tlv::nfd::NOutVicinityDatas) {
+    m_nOutVicinityDatas = static_cast<uint64_t>(readNonNegativeInteger(*val));
+    ++val;
+  }
+  else {
+    BOOST_THROW_EXCEPTION(Error("missing required NOutVicinityDatas field"));
+  }
+
 }
 
 ForwarderStatus&
@@ -388,6 +433,38 @@ ForwarderStatus::setNOutDatas(uint64_t nOutDatas)
 {
   m_wire.reset();
   m_nOutDatas = nOutDatas;
+  return *this;
+}
+
+ForwarderStatus&
+ForwarderStatus::setNOutAnnouncements(uint64_t nOutAnnouncements)
+{
+  m_wire.reset();
+  m_nOutAnnouncements = nOutAnnouncements;
+  return *this;
+}
+
+ForwarderStatus&
+ForwarderStatus::setNOutHints(uint64_t nOutHints)
+{
+  m_wire.reset();
+  m_nOutHints = nOutHints;
+  return *this;
+}
+
+ForwarderStatus&
+ForwarderStatus::setNOutVicinities(uint64_t nOutVicinities)
+{
+  m_wire.reset();
+  m_nOutVicinities = nOutVicinities;
+  return *this;
+}
+
+ForwarderStatus&
+ForwarderStatus::setNOutVicinityDatas(uint64_t nOutVicinityDatas)
+{
+  m_wire.reset();
+  m_nOutVicinityDatas = nOutVicinityDatas;
   return *this;
 }
 

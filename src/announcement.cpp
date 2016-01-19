@@ -35,6 +35,10 @@ BOOST_CONCEPT_ASSERT((WireDecodable<Announcement>));
 static_assert(std::is_base_of<tlv::Error, Announcement::Error>::value,
               "Announcement::Error must inherit from tlv::Error");
 
+Announcement::Announcement()
+{
+}
+
 Announcement::Announcement(const Name& name)
   : m_name(name)
   , m_announcementTimeout(time::milliseconds::min())

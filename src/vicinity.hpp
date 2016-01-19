@@ -54,6 +54,8 @@ public:
     }
   };
 
+  Vicinity();
+
   /** @brief Create a new Vicinity with the given name
    *  @param name The name for the vicinity probe.
    *  @note This constructor allows implicit conversion from Name.
@@ -122,16 +124,6 @@ public: // matching
   bool
   matchesName(const Name& name) const;
 
-  /**
-   * @brief Check if Vicinity can be satisfied by @p data.
-   *
-   * This method considers Name
-   *
-   * @todo recognize implicit digest component
-   */
-  bool
-  matchesData(const Data& data) const;
-
 public: // Name and guiders
   const Name&
   getName() const
@@ -148,7 +140,7 @@ public: // Name and guiders
   }
 
   uint32_t
-  getScope()
+  getScope() const
   {
     return m_scope;
   }
@@ -217,7 +209,7 @@ public: // EqualityComparable concept
 
 private:
   Name m_name;
-  uint32_t m_scope;
+  mutable uint32_t m_scope;
 
   mutable Block m_wire;
 

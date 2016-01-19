@@ -53,6 +53,8 @@ public:
     }
   };
 
+  Announcement();
+
   /** @brief Create a new Announcement with the given name
    *  @param name The name for the announced content.
    *  @note This constructor allows implicit conversion from Name.

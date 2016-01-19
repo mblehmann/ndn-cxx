@@ -43,6 +43,10 @@ FaceStatus::FaceStatus()
   , m_nInVicinityDatas(0)
   , m_nOutInterests(0)
   , m_nOutDatas(0)
+  , m_nOutAnnouncements(0)
+  , m_nOutHints(0)
+  , m_nOutVicinities(0)
+  , m_nOutVicinityDatas(0)
   , m_nInBytes(0)
   , m_nOutBytes(0)
 {
@@ -63,6 +67,14 @@ FaceStatus::wireEncode(EncodingImpl<TAG>& encoder) const
                  tlv::nfd::NOutBytes, m_nOutBytes);
   totalLength += prependNonNegativeIntegerBlock(encoder,
                  tlv::nfd::NInBytes, m_nInBytes);
+  totalLength += prependNonNegativeIntegerBlock(encoder,
+                 tlv::nfd::NOutVicinityDatas, m_nOutVicinityDatas);
+  totalLength += prependNonNegativeIntegerBlock(encoder,
+                 tlv::nfd::NOutVicinities, m_nOutVicinities);
+  totalLength += prependNonNegativeIntegerBlock(encoder,
+                 tlv::nfd::NOutHints, m_nOutHints);
+  totalLength += prependNonNegativeIntegerBlock(encoder,
+                 tlv::nfd::NOutAnnouncements, m_nOutAnnouncements);
   totalLength += prependNonNegativeIntegerBlock(encoder,
                  tlv::nfd::NOutDatas, m_nOutDatas);
   totalLength += prependNonNegativeIntegerBlock(encoder,
@@ -255,6 +267,38 @@ FaceStatus::wireDecode(const Block& block)
     BOOST_THROW_EXCEPTION(Error("missing required NOutDatas field"));
   }
 
+  if (val != m_wire.elements_end() && val->type() == tlv::nfd::NOutAnnouncements) {
+    m_nOutAnnouncements = readNonNegativeInteger(*val);
+    ++val;
+  }
+  else {
+    BOOST_THROW_EXCEPTION(Error("missing required NOutAnnouncements field"));
+  }
+
+  if (val != m_wire.elements_end() && val->type() == tlv::nfd::NOutHints) {
+    m_nOutHints = readNonNegativeInteger(*val);
+    ++val;
+  }
+  else {
+    BOOST_THROW_EXCEPTION(Error("missing required NOutHints field"));
+  }
+
+  if (val != m_wire.elements_end() && val->type() == tlv::nfd::NOutVicinities) {
+    m_nOutVicinities = readNonNegativeInteger(*val);
+    ++val;
+  }
+  else {
+    BOOST_THROW_EXCEPTION(Error("missing required NOutVicinities field"));
+  }
+
+  if (val != m_wire.elements_end() && val->type() == tlv::nfd::NOutVicinityDatas) {
+    m_nOutVicinityDatas = readNonNegativeInteger(*val);
+    ++val;
+  }
+  else {
+    BOOST_THROW_EXCEPTION(Error("missing required NOutVicinityDatas field"));
+  }
+
   if (val != m_wire.elements_end() && val->type() == tlv::nfd::NInBytes) {
     m_nInBytes = readNonNegativeInteger(*val);
     ++val;
@@ -346,6 +390,38 @@ FaceStatus::setNOutDatas(uint64_t nOutDatas)
 }
 
 FaceStatus&
+FaceStatus::setNOutAnnouncements(uint64_t nOutAnnouncements)
+{
+  m_wire.reset();
+  m_nOutAnnouncements = nOutAnnouncements;
+  return *this;
+}
+
+FaceStatus&
+FaceStatus::setNOutHints(uint64_t nOutHints)
+{
+  m_wire.reset();
+  m_nOutHints = nOutHints;
+  return *this;
+}
+
+FaceStatus&
+FaceStatus::setNOutVicinities(uint64_t nOutVicinities)
+{
+  m_wire.reset();
+  m_nOutVicinities = nOutVicinities;
+  return *this;
+}
+
+FaceStatus&
+FaceStatus::setNOutVicinityDatas(uint64_t nOutVicinityDatas)
+{
+  m_wire.reset();
+  m_nOutVicinityDatas = nOutVicinityDatas;
+  return *this;
+}
+
+FaceStatus&
 FaceStatus::setNInBytes(uint64_t nInBytes)
 {
   m_wire.reset();
@@ -390,13 +466,13 @@ operator<<(std::ostream& os, const FaceStatus& status)
      << "            Data: {in: " << status.getNInDatas() << ", "
      << "out: " << status.getNOutDatas() << "},\n"
      << "            Announcement: {in: " << status.getNInAnnouncements() << ", "
-     << "out: " << status.getNInAnnouncements() << "},\n"
+     << "out: " << status.getNOutAnnouncements() << "},\n"
      << "            Hint: {in: " << status.getNInHints() << ", "
-     << "out: " << status.getNInHints() << "},\n"
+     << "out: " << status.getNOutHints() << "},\n"
      << "            Vicinity: {in: " << status.getNInVicinities() << ", "
-     << "out: " << status.getNInVicinities() << "},\n"
+     << "out: " << status.getNOutVicinities() << "},\n"
      << "            VicinityData: {in: " << status.getNInVicinityDatas() << ", "
-     << "out: " << status.getNInVicinityDatas() << "},\n"
+     << "out: " << status.getNOutVicinityDatas() << "},\n"
      << "            bytes: {in: " << status.getNInBytes() << ", "
      << "out: " << status.getNOutBytes() << "} }\n"
      << ")";

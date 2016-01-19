@@ -82,6 +82,11 @@ enum {
   NInVicinities    = 153,
   NInVicinityDatas = 154,
 
+  NOutAnnouncements = 155,
+  NOutHints         = 156,
+  NOutVicinities    = 157,
+  NOutVicinityDatas = 158,
+
   // FIB Management
   FibEntry      = 128,
   NextHopRecord = 129,
