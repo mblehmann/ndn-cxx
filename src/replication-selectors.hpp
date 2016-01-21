@@ -77,23 +77,32 @@ public:
 
 public: // getters & setters for replication selectors
 
-  const Exclude&
-  getExclude() const
+  int
+  getNodeID() const
   {
-    return m_exclude;
+    return m_nodeID;
   }
 
   ReplicationSelectors&
-  setExclude(const Exclude& exclude);
+  setNodeID(int nodeID); 
 
- int
-  getMustBeFresh() const
+  bool
+  getInterested() const
   {
-    return m_mustBeFresh;
+    return m_interested;
   }
 
   ReplicationSelectors&
-  setMustBeFresh(bool mustBeFresh);
+  setInterested(bool interested); 
+
+  int
+  getAvailability() const
+  {
+    return m_availability;
+  }
+
+  ReplicationSelectors&
+  setAvailability(int availability);
 
 public: // EqualityComparable concept
   bool
@@ -106,10 +115,9 @@ public: // EqualityComparable concept
   }
 
 private:
-  Exclude m_exclude;
-  bool m_mustBeFresh;
-
-  // TODO: ADD DESIRED SELECTORS (availability, interest etc)
+  int m_nodeID;
+  bool m_interested;
+  int m_availability;
 
   mutable Block m_wire;
 };

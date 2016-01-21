@@ -84,7 +84,7 @@ Vicinity::wireEncode(EncodingImpl<TAG>& encoder) const
       getScope() != DEFAULT_VICINITY_SCOPE)
     {
       totalLength += prependNonNegativeIntegerBlock(encoder,
-                                                    tlv::VicinityScope,
+                                                    tlv::Scope,
                                                     getScope());
     }
 
@@ -139,7 +139,7 @@ Vicinity::wireDecode(const Block& wire)
   m_name.wireDecode(m_wire.get(tlv::Name));
 
   // Scope
-  Block::element_const_iterator val = m_wire.find(tlv::VicinityScope);
+  Block::element_const_iterator val = m_wire.find(tlv::Scope);
   if (val != m_wire.elements_end())
     {
       m_scope = uint32_t(readNonNegativeInteger(*val));

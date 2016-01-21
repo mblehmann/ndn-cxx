@@ -34,7 +34,9 @@ namespace ndn {
 
 class Data;
 
-/** @brief represents a Vicinity packet
+const int DEFAULT_VICINITY_DATA_NODEID = -1;
+
+/** @brief represents a Vicinity Data packet
  */
 class VicinityData : public TagHost, public enable_shared_from_this<VicinityData>
 {
@@ -51,7 +53,7 @@ public:
 
   VicinityData();
 
-  /** @brief Create a new Vicinity with the given name
+  /** @brief Create a new Vicinity Data with the given name
    *  @param name The name for the vicinity probe.
    *  @note This constructor allows implicit conversion from Name.
    *  @warning In certain contexts that use Vicinity::shared_from_this(), Vicinity must be created
@@ -65,7 +67,7 @@ public:
    *  @warning In certain contexts that use Vicinity::shared_from_this(), Vicinity must be created
    *           using `make_shared`. Otherwise, .shared_from_this() will throw an exception.
    */
-  VicinityData(const Name& name, uint32_t scope);
+  VicinityData(const Name& name, int nodeID);
 
   /** @brief Create from wire encoding
    *  @warning In certain contexts that use Vicinity::shared_from_this(), Vicinity must be created
@@ -127,7 +129,7 @@ public: // matching
    * @todo recognize implicit digest component
    */
   bool
-  matchesData(const Data& data) const;
+  matchesData(const VicinityData& data) const;
 
 public: // Name and guiders
   const Name&
@@ -144,16 +146,16 @@ public: // Name and guiders
     return *this;
   }
 
-  uint32_t
-  getScope()
+  int
+  getNodeID() const
   {
-    return m_scope;
+    return m_nodeID;
   }
 
   VicinityData&
-  setScope(uint32_t scope)
+  setNodeID(int nodeID)
   {
-    m_scope = scope;
+    m_nodeID = nodeID;
     m_wire.reset();
     return *this;
   }
@@ -214,7 +216,7 @@ public: // EqualityComparable concept
 
 private:
   Name m_name;
-  uint32_t m_scope;
+  int m_nodeID;
 
   mutable Block m_wire;
 

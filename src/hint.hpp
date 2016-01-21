@@ -75,7 +75,7 @@ public:
    *  @warning In certain contexts that use Hint::shared_from_this(), Hint must be created
    *           using `make_shared`. Otherwise, .shared_from_this() will throw an exception.
    */
-  Hint(const Name& name, const int& hintScope);
+  Hint(const Name& name, const int& scope);
 
    /** @brief Create from wire encoding
    *  @warning In certain contexts that use Hint::shared_from_this(), Hint must be created
@@ -145,15 +145,15 @@ public: // Name and guiders
   }
 
   const int&
-  getHintScope() const
+  getScope() const
   {
-    return m_hintScope;
+    return m_scope;
   }
 
   Hint&
-  setHintScope(const int& hintScope)
+  setScope(const int& scope)
   {
-    m_hintScope = hintScope;
+    m_scope = scope;
     m_wire.reset();
     return *this;
   }
@@ -224,36 +224,48 @@ public: // Selectors (ReplicationSelectors)
     return *this;
   }
 
-  /* TODO: check if exclude selector makes any sense */
-  const Exclude&
-  getExclude() const
+  int
+  getNodeID() const
   {
-    return m_selectors.getExclude();
+    return m_selectors.getNodeID();
   }
 
   Hint&
-  setExclude(const Exclude& exclude)
+  setNodeID(int nodeID)
   {
-    m_selectors.setExclude(exclude);
+    m_selectors.setNodeID(nodeID);
     m_wire.reset();
     return *this;
   }
   
-  /* TODO: check if freshness selector makes any sense */
-  int
-  getMustBeFresh() const
+  bool
+  getInterested() const
   {
-    return m_selectors.getMustBeFresh();
+    return m_selectors.getInterested();
   }
 
   Hint&
-  setMustBeFresh(bool mustBeFresh)
+  setInterested(bool interested)
   {
-    m_selectors.setMustBeFresh(mustBeFresh);
+    m_selectors.setInterested(interested);
     m_wire.reset();
     return *this;
   }
 
+  int
+  getAvailability() const
+  {
+    return m_selectors.getAvailability();
+  }
+
+  Hint&
+  setAvailability(int availability)
+  {
+    m_selectors.setAvailability(availability);
+    m_wire.reset();
+    return *this;
+  }
+  
 public: // EqualityComparable concept
   bool
   operator==(const Hint& other) const
@@ -269,7 +281,7 @@ public: // EqualityComparable concept
 
 private:
   Name m_name;
-  int m_hintScope;
+  int m_scope;
   ReplicationSelectors m_selectors;
 
   mutable Block m_wire;

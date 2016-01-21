@@ -41,13 +41,13 @@ Announcement::Announcement()
 
 Announcement::Announcement(const Name& name)
   : m_name(name)
-  , m_announcementTimeout(time::milliseconds::min())
+  , m_timeout(time::milliseconds::min())
 {
 }
 
-Announcement::Announcement(const Name& name, const time::milliseconds& announcementTimeout)
+Announcement::Announcement(const Name& name, const time::milliseconds& timeout)
   : m_name(name)
-  , m_announcementTimeout(announcementTimeout)
+  , m_timeout(timeout)
 {
 }
 
@@ -120,17 +120,17 @@ Announcement::wireEncode(EncodingImpl<TAG>& encoder) const
   // Announcement ::= ANNOUNCEMENT-TYPE TLV-LENGTH
   //                Name
   //                Nonce
-  //                AnnouncementTimeout
+  //                Timeout
 
   // (reverse encoding)
 
-  // AnnouncementTimeout
-  if (getAnnouncementTimeout() >= time::milliseconds::zero() &&
-      getAnnouncementTimeout() != DEFAULT_ANNOUNCEMENT_TIMEOUT)
+  // Timeout
+  if (getTimeout() >= time::milliseconds::zero() &&
+      getTimeout() != DEFAULT_ANNOUNCEMENT_TIMEOUT)
     {
       totalLength += prependNonNegativeIntegerBlock(encoder,
-                                                    tlv::AnnouncementTimeout,
-                                                    getAnnouncementTimeout().count());
+                                                    tlv::Timeout,
+                                                    getTimeout().count());
     }
 
   // Nonce
@@ -178,7 +178,7 @@ Announcement::wireDecode(const Block& wire)
   // Announcement ::= ANNOUNCEMENT-TYPE TLV-LENGTH
   //                Name
   //                Nonce
-  //                AnnouncementTimeout
+  //                Timeout
 
   if (m_wire.type() != tlv::Announcement)
     BOOST_THROW_EXCEPTION(Error("Unexpected TLV number when decoding Announcement"));
@@ -189,15 +189,15 @@ Announcement::wireDecode(const Block& wire)
   // Nonce
   m_nonce = m_wire.get(tlv::Nonce);
 
-  // AnnouncementTimeout
-  Block::element_const_iterator val = m_wire.find(tlv::AnnouncementTimeout);
+  // Timeout
+  Block::element_const_iterator val = m_wire.find(tlv::Timeout);
   if (val != m_wire.elements_end())
     {
-      m_announcementTimeout = time::milliseconds(readNonNegativeInteger(*val));
+      m_timeout = time::milliseconds(readNonNegativeInteger(*val));
     }
   else
     {
-      m_announcementTimeout = DEFAULT_ANNOUNCEMENT_TIMEOUT;
+      m_timeout = DEFAULT_ANNOUNCEMENT_TIMEOUT;
     }
 
 }
@@ -209,9 +209,9 @@ operator<<(std::ostream& os, const Announcement& announcement)
 
   char delim = '?';
 
-  if (announcement.getAnnouncementTimeout() >= time::milliseconds::zero()
-      && announcement.getAnnouncementTimeout() != DEFAULT_ANNOUNCEMENT_TIMEOUT) {
-    os << delim << "ndn.AnnouncementTimeout=" << announcement.getAnnouncementTimeout().count();
+  if (announcement.getTimeout() >= time::milliseconds::zero()
+      && announcement.getTimeout() != DEFAULT_ANNOUNCEMENT_TIMEOUT) {
+    os << delim << "ndn.AnnouncementTimeout=" << announcement.getTimeout().count();
     delim = '&';
   }
 

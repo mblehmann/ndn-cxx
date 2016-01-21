@@ -35,7 +35,9 @@ static_assert(std::is_base_of<tlv::Error, ReplicationSelectors::Error>::value,
               "ReplicationSelectors::Error must inherit from tlv::Error");
 
 ReplicationSelectors::ReplicationSelectors()
-  : m_mustBeFresh(false)
+  : m_nodeID(-1)
+  , m_interested(false)
+  , m_availability(-1)
 {
 }
 
@@ -47,8 +49,7 @@ ReplicationSelectors::ReplicationSelectors(const Block& wire)
 bool
 ReplicationSelectors::empty() const
 {
-  return m_exclude.empty() &&
-         !m_mustBeFresh;
+  return m_nodeID == -1 && m_interested && m_availability == -1;
 }
 
 template<encoding::Tag TAG>
@@ -56,21 +57,22 @@ size_t
 ReplicationSelectors::wireEncode(EncodingImpl<TAG>& encoder) const
 {
   size_t totalLength = 0;
-  // TODO: DEFINE THE REST OF THE HINT and VICINITY SELECTORS
-  // THE ADDED SELECTORS SHOULD BE DEFINED in src/encoding/tlv.hpp
-  // ReplicationSelectors ::= SELECTORS-TYPE TLV-LENGTH
-  //                 Exclude?
-  //                 MustBeFresh?
+  // ReplicationSelectors ::= REPLICATION-SELECTORS-TYPE TLV-LENGTH
+  //                              NodeID?
+  //                              Interested?
+  //                              Availability?
   // (reverse encoding)
 
-  // MustBeFresh
-  if (getMustBeFresh()) {
-    totalLength += prependEmptyBlock(encoder, tlv::MustBeFresh);
+  if (getAvailability() >= 0) {
+    totalLength += prependNonNegativeIntegerBlock(encoder, tlv::Availability, getAvailability());
   }
 
-  // Exclude
-  if (!getExclude().empty()) {
-    totalLength += getExclude().wireEncode(encoder);
+  if (getInterested()) {
+    totalLength += prependEmptyBlock(encoder, tlv::Interested);
+  }
+
+  if (getNodeID() >= 0) {
+    totalLength += prependNonNegativeIntegerBlock(encoder, tlv::NodeID, getNodeID());
   }
 
   totalLength += encoder.prependVarNumber(totalLength);
@@ -111,23 +113,42 @@ ReplicationSelectors::wireDecode(const Block& wire)
   m_wire = wire;
   m_wire.parse();
 
-  // Exclude
-  Block::element_const_iterator val = m_wire.find(tlv::Exclude);
+  Block::element_const_iterator val = m_wire.find(tlv::NodeID);
   if (val != m_wire.elements_end()) {
-    m_exclude.wireDecode(*val);
+    m_nodeID = readNonNegativeInteger(*val);
   }
 
-  // MustBeFresh
-  val = m_wire.find(tlv::MustBeFresh);
+  val = m_wire.find(tlv::Interested);
   if (val != m_wire.elements_end()) {
-    m_mustBeFresh = true;
+    m_interested = true;
+  }
+
+  val = m_wire.find(tlv::Availability);
+  if (val != m_wire.elements_end()) {
+    m_availability = readNonNegativeInteger(*val);
   }
 }
 
 ReplicationSelectors&
-ReplicationSelectors::setExclude(const Exclude& exclude)
+ReplicationSelectors::setNodeID(int nodeID)
 {
-  m_exclude = exclude;
+  m_nodeID = nodeID;
+  m_wire.reset();
+  return *this;
+}
+
+ReplicationSelectors&
+ReplicationSelectors::setInterested(bool interested)
+{
+  m_interested = interested;
+  m_wire.reset();
+  return *this;
+}
+
+ReplicationSelectors&
+ReplicationSelectors::setAvailability(int availability)
+{
+  m_availability = availability;
   m_wire.reset();
   return *this;
 }

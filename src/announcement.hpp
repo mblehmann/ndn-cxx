@@ -135,15 +135,15 @@ public: // Name and guiders
   }
 
   const time::milliseconds&
-  getAnnouncementTimeout() const
+  getTimeout() const
   {
-    return m_announcementTimeout;
+    return m_timeout;
   }
 
   Announcement&
-  setAnnouncementTimeout(const time::milliseconds& announcementTimeout)
+  setTimeout(const time::milliseconds& timeout)
   {
-    m_announcementTimeout = announcementTimeout;
+    m_timeout = timeout;
     m_wire.reset();
     return *this;
   }
@@ -238,7 +238,7 @@ public: // EqualityComparable concept
 private:
   Name m_name;
   mutable Block m_nonce;
-  time::milliseconds m_announcementTimeout;
+  time::milliseconds m_timeout;
 
   mutable Block m_wire;
 

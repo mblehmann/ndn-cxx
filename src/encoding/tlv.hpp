@@ -89,16 +89,17 @@ enum {
   SelectedDelegation = 32,
 
   Announcement = 40,
-  AnnouncementTimeout = 41,
+  Hint = 41,
+  Vicinity = 42,
+  VicinityData = 43,
 
   /* added by prlanzarin */
-  Hint = 42,
-  HintScope = 43, 
-  Vicinity = 44,
-  VicinityScope = 45,
-  VicinityData = 46,
-  // Vicinity fields to be added
-  ReplicationSelectors = 47,
+  Timeout = 44,
+  Scope = 45, 
+  ReplicationSelectors = 46,
+  NodeID = 47,
+  Interested=48,
+  Availability=49,
 
   AppPrivateBlock1 = 128,
   AppPrivateBlock2 = 32767

@@ -44,9 +44,9 @@ Hint::Hint(const Name& name)
 {
 }
 
-Hint::Hint(const Name& name, const int& hintScope)
+Hint::Hint(const Name& name, const int& scope)
   : m_name(name)
-  , m_hintScope(hintScope)
+  , m_scope(scope)
 {
 }
 
@@ -62,11 +62,6 @@ Hint::matchesName(const Name& name) const
     return false;
 
   if (!m_name.isPrefixOf(name))
-    return false;
-
-  if (!getExclude().empty() &&
-      name.size() > m_name.size() &&
-      getExclude().isExcluded(name[m_name.size()]))
     return false;
 
   return true;
@@ -91,10 +86,10 @@ Hint::wireEncode(EncodingImpl<TAG>& encoder) const
 
 
   // Scope
-  if (getHintScope() >= 0 && getHintScope() != DEFAULT_HINT_SCOPE)
+  if (getScope() >= 0 && getScope() != DEFAULT_HINT_SCOPE)
       totalLength += prependNonNegativeIntegerBlock(encoder,
-                                                    tlv::HintScope,
-                                                    getHintScope());
+                                                    tlv::Scope,
+                                                    getScope());
   // Name
   totalLength += getName().wireEncode(encoder);
 
@@ -121,9 +116,8 @@ Hint::wireEncode() const
   EncodingBuffer buffer(estimatedSize, 0);
   wireEncode(buffer);
 
-  // TODO CHECK
   // to ensure that Nonce block points to the right memory location
-  // const_cast<Interest*>(this)->wireDecode(buffer.block());
+  const_cast<Hint*>(this)->wireDecode(buffer.block());
 
   return m_wire;
 }
@@ -142,15 +136,27 @@ Hint::wireDecode(const Block& wire)
   if (m_wire.type() != tlv::Hint)
     BOOST_THROW_EXCEPTION(Error("Unexpected TLV number when decoding Hint"));
 
-// Selectors
-  Block::element_const_iterator val = m_wire.find(tlv::ReplicationSelectors);
+  // Name
+  m_name.wireDecode(m_wire.get(tlv::Name));
+
+
+  // Scope
+  Block::element_const_iterator val = m_wire.find(tlv::Scope);
+  if (val != m_wire.elements_end())
+    {
+      m_scope = uint32_t(readNonNegativeInteger(*val));
+    }
+  else
+    {
+      m_scope = DEFAULT_HINT_SCOPE;
+    }
+  
+  // Selectors
+  val = m_wire.find(tlv::ReplicationSelectors);
   if (val != m_wire.elements_end()) 
       m_selectors.wireDecode(*val);
   else
     m_selectors = ReplicationSelectors();
-
-  // Name
-  m_name.wireDecode(m_wire.get(tlv::Name));
 
 }
 
@@ -161,20 +167,23 @@ operator<<(std::ostream& os, const Hint& hint)
 
   char delim = '?';
 
-  if (hint.getHintScope() >= 0 && hint.getHintScope() != DEFAULT_HINT_SCOPE) {
-    os << delim << "ndn.HintScope=" << hint.getHintScope(); 
+  if (hint.getScope() >= 0 && hint.getScope() != DEFAULT_HINT_SCOPE) {
+    os << delim << "ndn.HintScope=" << hint.getScope(); 
     delim = '&';
   }
 
-  // TODO IMPLEMENT << DESIRED SELECTORS
-
-  if (hint.getMustBeFresh()) {
-    os << delim << "ndn.MustBeFresh=" << hint.getMustBeFresh();
+  if (hint.getNodeID() >= 0) {
+    os << delim << "ndn.NodeID=" << hint.getNodeID();
     delim = '&';
   }
 
-  if (!hint.getExclude().empty()) {
-    os << delim << "ndn.Exclude=" << hint.getExclude();
+  if (hint.getInterested()) {
+    os << delim << "ndn.Interested=" << hint.getInterested();
+    delim = '&';
+  }
+
+  if (!hint.getAvailability() >= 0) {
+    os << delim << "ndn.Availability=" << hint.getAvailability();
     delim = '&';
   }
 
