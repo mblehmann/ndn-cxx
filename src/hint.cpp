@@ -39,13 +39,15 @@ Hint::Hint()
 {
 }
 
-Hint::Hint(const Name& name)
+Hint::Hint(const Name& name, const uint32_t& size)
   : m_name(name)
+  , m_size(size)
 {
 }
 
-Hint::Hint(const Name& name, const int& scope)
+Hint::Hint(const Name& name, const uint32_t& size, const int& scope)
   : m_name(name)
+  , m_size(size)
   , m_scope(scope)
 {
 }
@@ -75,6 +77,7 @@ Hint::wireEncode(EncodingImpl<TAG>& encoder) const
 
   // HINT ::= HINT-TYPE TLV-LENGTH
   //                Name
+  //                Size 
   //                Scope 
   //                Selectors?
   //
@@ -90,6 +93,11 @@ Hint::wireEncode(EncodingImpl<TAG>& encoder) const
       totalLength += prependNonNegativeIntegerBlock(encoder,
                                                     tlv::Scope,
                                                     getScope());
+  // Size
+  totalLength += prependNonNegativeIntegerBlock(encoder,
+                                                tlv::Size,
+                                                getSize());
+
   // Name
   totalLength += getName().wireEncode(encoder);
 
@@ -130,6 +138,7 @@ Hint::wireDecode(const Block& wire)
 
   // HINT ::= HINT-TYPE TLV-LENGTH
   //                Name
+  //                Size
   //                Scope
   //                Selectors?
 
@@ -139,9 +148,12 @@ Hint::wireDecode(const Block& wire)
   // Name
   m_name.wireDecode(m_wire.get(tlv::Name));
 
+  // Size
+  Block::element_const_iterator val = m_wire.find(tlv::Size);
+  m_size =  uint32_t(readNonNegativeInteger(*val));
 
   // Scope
-  Block::element_const_iterator val = m_wire.find(tlv::Scope);
+  val = m_wire.find(tlv::Scope);
   if (val != m_wire.elements_end())
     {
       m_scope = uint32_t(readNonNegativeInteger(*val));
@@ -163,7 +175,7 @@ Hint::wireDecode(const Block& wire)
 std::ostream&
 operator<<(std::ostream& os, const Hint& hint)
 {
-  os << hint.getName();
+  os << hint.getName() << "/" << hint.getSize();
 
   char delim = '?';
 

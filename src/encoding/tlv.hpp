@@ -100,6 +100,7 @@ enum {
   NodeID = 47,
   Interested=48,
   Availability=49,
+  Size=50,
 
   AppPrivateBlock1 = 128,
   AppPrivateBlock2 = 32767

@@ -67,7 +67,7 @@ public:
    *  @warning In certain contexts that use Hint::shared_from_this(), Hint must be created
    *           using `make_shared`. Otherwise, .shared_from_this() will throw an exception.
    */
-  Hint(const Name& name);
+  Hint(const Name& name, const uint32_t& size);
 
   /** @brief Create a new Hint with the given name and scope value
    *  @param name The name for the hint.
@@ -75,7 +75,7 @@ public:
    *  @warning In certain contexts that use Hint::shared_from_this(), Hint must be created
    *           using `make_shared`. Otherwise, .shared_from_this() will throw an exception.
    */
-  Hint(const Name& name, const int& scope);
+  Hint(const Name& name, const uint32_t& size, const int& scope);
 
    /** @brief Create from wire encoding
    *  @warning In certain contexts that use Hint::shared_from_this(), Hint must be created
@@ -158,6 +158,19 @@ public: // Name and guiders
     return *this;
   }
 
+  const uint32_t&
+  getSize() const
+  {
+    return m_size;
+  }
+
+  Hint&
+  setSize(const uint32_t& size)
+  {
+    m_size = size;
+    m_wire.reset();
+    return *this;
+  }
 
 public: // local control header
   nfd::LocalControlHeader&
@@ -282,6 +295,7 @@ public: // EqualityComparable concept
 private:
   Name m_name;
   int m_scope;
+  uint32_t m_size;
   ReplicationSelectors m_selectors;
 
   mutable Block m_wire;
