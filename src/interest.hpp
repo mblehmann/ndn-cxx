@@ -30,6 +30,7 @@
 #include "management/nfd-local-control-header.hpp"
 #include "tag-host.hpp"
 #include "link.hpp"
+#include "strategy-selectors.hpp"
 
 namespace ndn {
 
@@ -422,6 +423,86 @@ public: // Selectors
     return *this;
   }
 
+public: // Strategy Selectors
+  /**
+   * @return true if Interest has any strategy selector present
+   */
+  bool
+  hasStrategySelectors() const
+  {
+    return !m_strategySelectors.empty();
+  }
+
+  const StrategySelectors&
+  getStrategySelectors() const
+  {
+    return m_strategySelectors;
+  }
+
+  Interest&
+  setStrategySelectors(const StrategySelectors& strategySelectors)
+  {
+    m_strategySelectors = strategySelectors;
+    m_wire.reset();
+    return *this;
+  }
+
+  int
+  getScope() const
+  {
+    return m_strategySelectors.getScope();
+  }
+
+  Interest&
+  setScope(int scope)
+  {
+    m_strategySelectors.setScope(scope);
+    m_wire.reset();
+    return *this;
+  }
+
+  int
+  getNodeId() const
+  {
+    return m_strategySelectors.getNodeId();
+  }
+
+  Interest&
+  setNodeId(int nodeId)
+  {
+    m_strategySelectors.setNodeId(nodeId);
+    m_wire.reset();
+    return *this;
+  }
+
+  bool
+  getInterested() const
+  {
+    return m_strategySelectors.getInterested();
+  }
+
+  Interest&
+  setInterested(bool interested)
+  {
+    m_strategySelectors.setInterested(interested);
+    m_wire.reset();
+    return *this;
+  }
+
+  int
+  getAvailability() const
+  {
+    return m_strategySelectors.getAvailability();
+  }
+
+  Interest&
+  setAvailability(int availability)
+  {
+    m_strategySelectors.setAvailability(availability);
+    m_wire.reset();
+    return *this;
+  }
+
 public: // EqualityComparable concept
   bool
   operator==(const Interest& other) const
@@ -440,6 +521,7 @@ private:
   Selectors m_selectors;
   mutable Block m_nonce;
   time::milliseconds m_interestLifetime;
+  StrategySelectors m_strategySelectors;
 
   mutable Block m_link;
   size_t m_selectedDelegationIndex;

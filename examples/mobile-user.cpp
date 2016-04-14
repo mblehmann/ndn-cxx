@@ -86,18 +86,6 @@ private:
     m_face.put(*data);
   }
 
-  // void
-  // onHint(const Hint& hint)
-  // {
-
-  // }
-
-  // void
-  // onVicinity(const Vicinity& vicinity)
-  // {
-
-  // }
-
   void
   onRegisterFailed(const Name& prefix, const std::string& reason)
   {

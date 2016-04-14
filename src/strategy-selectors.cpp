@@ -21,44 +21,46 @@
  * @author Paulo R Lanzarin <prlanzarin@inf.ufrgs.br>
  */
 
-#include "replication-selectors.hpp"
+#include "strategy-selectors.hpp"
 #include "encoding/encoding-buffer.hpp"
 #include "encoding/block-helpers.hpp"
 
 namespace ndn {
 
-BOOST_CONCEPT_ASSERT((boost::EqualityComparable<ReplicationSelectors>));
-BOOST_CONCEPT_ASSERT((WireEncodable<ReplicationSelectors>));
-BOOST_CONCEPT_ASSERT((WireEncodableWithEncodingBuffer<ReplicationSelectors>));
-BOOST_CONCEPT_ASSERT((WireDecodable<ReplicationSelectors>));
-static_assert(std::is_base_of<tlv::Error, ReplicationSelectors::Error>::value,
-              "ReplicationSelectors::Error must inherit from tlv::Error");
+BOOST_CONCEPT_ASSERT((boost::EqualityComparable<StrategySelectors>));
+BOOST_CONCEPT_ASSERT((WireEncodable<StrategySelectors>));
+BOOST_CONCEPT_ASSERT((WireEncodableWithEncodingBuffer<StrategySelectors>));
+BOOST_CONCEPT_ASSERT((WireDecodable<StrategySelectors>));
+static_assert(std::is_base_of<tlv::Error, StrategySelectors::Error>::value,
+              "StrategySelectors::Error must inherit from tlv::Error");
 
-ReplicationSelectors::ReplicationSelectors()
-  : m_nodeID(-1)
+StrategySelectors::StrategySelectors()
+  : m_scope(-1)
+  , m_nodeId(-1)
   , m_interested(false)
   , m_availability(-1)
 {
 }
 
-ReplicationSelectors::ReplicationSelectors(const Block& wire)
+StrategySelectors::StrategySelectors(const Block& wire)
 {
   wireDecode(wire);
 }
 
 bool
-ReplicationSelectors::empty() const
+StrategySelectors::empty() const
 {
-  return m_nodeID == -1 && m_interested && m_availability == -1;
+  return m_scope == -1 && m_nodeId == -1 && !m_interested && m_availability == -1;
 }
 
 template<encoding::Tag TAG>
 size_t
-ReplicationSelectors::wireEncode(EncodingImpl<TAG>& encoder) const
+StrategySelectors::wireEncode(EncodingImpl<TAG>& encoder) const
 {
   size_t totalLength = 0;
-  // ReplicationSelectors ::= REPLICATION-SELECTORS-TYPE TLV-LENGTH
-  //                              NodeID?
+  // StrategySelectors ::= STRATEGY-SELECTORS-TYPE TLV-LENGTH
+  //                              Scope?
+  //                              NodeId?
   //                              Interested?
   //                              Availability?
   // (reverse encoding)
@@ -71,23 +73,27 @@ ReplicationSelectors::wireEncode(EncodingImpl<TAG>& encoder) const
     totalLength += prependEmptyBlock(encoder, tlv::Interested);
   }
 
-  if (getNodeID() >= 0) {
-    totalLength += prependNonNegativeIntegerBlock(encoder, tlv::NodeID, getNodeID());
+  if (getNodeId() >= 0) {
+    totalLength += prependNonNegativeIntegerBlock(encoder, tlv::NodeId, getNodeId());
+  }
+
+  if (getScope() >= 0) {
+    totalLength += prependNonNegativeIntegerBlock(encoder, tlv::Scope, getScope());
   }
 
   totalLength += encoder.prependVarNumber(totalLength);
-  totalLength += encoder.prependVarNumber(tlv::ReplicationSelectors);
+  totalLength += encoder.prependVarNumber(tlv::StrategySelectors);
   return totalLength;
 }
 
 template size_t
-ReplicationSelectors::wireEncode<encoding::EncoderTag>(EncodingImpl<encoding::EncoderTag>& encoder) const;
+StrategySelectors::wireEncode<encoding::EncoderTag>(EncodingImpl<encoding::EncoderTag>& encoder) const;
 
 template size_t
-ReplicationSelectors::wireEncode<encoding::EstimatorTag>(EncodingImpl<encoding::EstimatorTag>& encoder) const;
+StrategySelectors::wireEncode<encoding::EstimatorTag>(EncodingImpl<encoding::EstimatorTag>& encoder) const;
 
 const Block&
-ReplicationSelectors::wireEncode() const
+StrategySelectors::wireEncode() const
 {
   if (m_wire.hasWire())
     return m_wire;
@@ -103,19 +109,24 @@ ReplicationSelectors::wireEncode() const
 }
 
 void
-ReplicationSelectors::wireDecode(const Block& wire)
+StrategySelectors::wireDecode(const Block& wire)
 {
-  if (wire.type() != tlv::ReplicationSelectors)
-    BOOST_THROW_EXCEPTION(tlv::Error("Unexpected TLV type when decoding ReplicationSelectors"));
+  if (wire.type() != tlv::StrategySelectors)
+    BOOST_THROW_EXCEPTION(tlv::Error("Unexpected TLV type when decoding StrategySelectors"));
 
-  *this = ReplicationSelectors();
+  *this = StrategySelectors();
 
   m_wire = wire;
   m_wire.parse();
 
-  Block::element_const_iterator val = m_wire.find(tlv::NodeID);
+  Block::element_const_iterator val = m_wire.find(tlv::Scope);
   if (val != m_wire.elements_end()) {
-    m_nodeID = readNonNegativeInteger(*val);
+    m_scope = readNonNegativeInteger(*val);
+  }
+
+  val = m_wire.find(tlv::NodeId);
+  if (val != m_wire.elements_end()) {
+    m_nodeId = readNonNegativeInteger(*val);
   }
 
   val = m_wire.find(tlv::Interested);
@@ -127,26 +138,35 @@ ReplicationSelectors::wireDecode(const Block& wire)
   if (val != m_wire.elements_end()) {
     m_availability = readNonNegativeInteger(*val);
   }
+
 }
 
-ReplicationSelectors&
-ReplicationSelectors::setNodeID(int nodeID)
+StrategySelectors&
+StrategySelectors::setScope(int scope)
 {
-  m_nodeID = nodeID;
+  m_scope = scope;
   m_wire.reset();
   return *this;
 }
 
-ReplicationSelectors&
-ReplicationSelectors::setInterested(bool interested)
+StrategySelectors&
+StrategySelectors::setNodeId(int nodeId)
+{
+  m_nodeId = nodeId;
+  m_wire.reset();
+  return *this;
+}
+
+StrategySelectors&
+StrategySelectors::setInterested(bool interested)
 {
   m_interested = interested;
   m_wire.reset();
   return *this;
 }
 
-ReplicationSelectors&
-ReplicationSelectors::setAvailability(int availability)
+StrategySelectors&
+StrategySelectors::setAvailability(int availability)
 {
   m_availability = availability;
   m_wire.reset();
@@ -154,7 +174,7 @@ ReplicationSelectors::setAvailability(int availability)
 }
 
 bool
-ReplicationSelectors::operator==(const ReplicationSelectors& other) const
+StrategySelectors::operator==(const StrategySelectors& other) const
 {
   return wireEncode() == other.wireEncode();
 }

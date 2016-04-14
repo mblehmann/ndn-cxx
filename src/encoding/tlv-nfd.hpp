@@ -78,14 +78,8 @@ enum {
   NOutBytes     = 149,
 
   NInAnnouncements = 151,
-  NInHints         = 152,
-  NInVicinities    = 153,
-  NInVicinityDatas = 154,
 
   NOutAnnouncements = 155,
-  NOutHints         = 156,
-  NOutVicinities    = 157,
-  NOutVicinityDatas = 158,
 
   // FIB Management
   FibEntry      = 128,

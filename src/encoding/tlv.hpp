@@ -88,19 +88,11 @@ enum {
   LinkDelegation = 31,
   SelectedDelegation = 32,
 
-  Announcement = 40,
-  Hint = 41,
-  Vicinity = 42,
-  VicinityData = 43,
-
-  /* added by prlanzarin */
-  Timeout = 44,
-  Scope = 45, 
-  ReplicationSelectors = 46,
-  NodeID = 47,
-  Interested=48,
-  Availability=49,
-  Size=50,
+  StrategySelectors = 40,
+  Scope             = 41,
+  NodeId            = 42,
+  Interested        = 43,
+  Availability      = 44,
 
   AppPrivateBlock1 = 128,
   AppPrivateBlock2 = 32767

@@ -164,41 +164,14 @@ public: // getters & setters
   ForwarderStatus&
   setNInDatas(uint64_t nInDatas);
 
-  uint64_t
-  getNInAnnouncements() const
-  {
-    return m_nInAnnouncements;
-  }
+//  uint64_t
+//  getNInAnnouncements() const
+//  {
+//    return m_nInAnnouncements;
+//  }
 
-  ForwarderStatus&
-  setNInAnnouncements(uint64_t nInAnnouncements);
-
-  uint64_t
-  getNInHints() const
-  {
-    return m_nInHints;
-  }
-
-  ForwarderStatus&
-  setNInHints(uint64_t nInHints);
-
-  uint64_t
-  getNInVicinities() const
-  {
-    return m_nInVicinities;
-  }
-
-  ForwarderStatus&
-  setNInVicinities(uint64_t nInVicinities);
-
-  uint64_t
-  getNInVicinityDatas() const
-  {
-    return m_nInVicinityDatas;
-  }
-
-  ForwarderStatus&
-  setNInVicinityDatas(uint64_t nInVicinityDatas);
+//  ForwarderStatus&
+//  setNInAnnouncements(uint64_t nInAnnouncements);
 
   uint64_t
   getNOutInterests() const
@@ -218,41 +191,14 @@ public: // getters & setters
   ForwarderStatus&
   setNOutDatas(uint64_t nOutDatas);
 
-  uint64_t
-  getNOutAnnouncements() const
-  {
-    return m_nOutAnnouncements;
-  }
+//  uint64_t
+//  getNOutAnnouncements() const
+//  {
+//    return m_nOutAnnouncements;
+//  }
 
-  ForwarderStatus&
-  setNOutAnnouncements(uint64_t nOutAnnouncements);
-
-  uint64_t
-  getNOutHints() const
-  {
-    return m_nOutHints;
-  }
-
-  ForwarderStatus&
-  setNOutHints(uint64_t nOutHints);
-
-  uint64_t
-  getNOutVicinities() const
-  {
-    return m_nOutVicinities;
-  }
-
-  ForwarderStatus&
-  setNOutVicinities(uint64_t nOutVicinities);
-
-  uint64_t
-  getNOutVicinityDatas() const
-  {
-    return m_nOutVicinityDatas;
-  }
-
-  ForwarderStatus&
-  setNOutVicinityDatas(uint64_t nOutVicinityDatas);
+//  ForwarderStatus&
+//  setNOutAnnouncements(uint64_t nOutAnnouncements);
 
 private:
   std::string m_nfdVersion;
@@ -265,16 +211,10 @@ private:
   size_t m_nCsEntries;
   uint64_t m_nInInterests;
   uint64_t m_nInDatas;
-  uint64_t m_nInAnnouncements;
-  uint64_t m_nInHints;
-  uint64_t m_nInVicinities;
-  uint64_t m_nInVicinityDatas;
+//  uint64_t m_nInAnnouncements;
   uint64_t m_nOutInterests;
   uint64_t m_nOutDatas;
-  uint64_t m_nOutAnnouncements;
-  uint64_t m_nOutHints;
-  uint64_t m_nOutVicinities;
-  uint64_t m_nOutVicinityDatas;
+//  uint64_t m_nOutAnnouncements;
 
   mutable Block m_wire;
 };

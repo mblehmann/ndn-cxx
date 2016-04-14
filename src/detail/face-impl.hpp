@@ -92,45 +92,15 @@ public:
         });
     }
 
-    virtual void
-    sendAnnouncement(const Announcement& announcement)
-    {
-      NS_LOG_DEBUG("<< Announcement " << announcement.getName());
-      shared_ptr<const Announcement> announcementPtr = announcement.shared_from_this();
+//    virtual void
+//    sendAnnouncement(const Announcement& announcement)
+//    {
+//      NS_LOG_DEBUG("<< Announcement " << announcement.getName());
+//      shared_ptr<const Announcement> announcementPtr = announcement.shared_from_this();
 //      m_appFaceImpl.m_scheduler.scheduleEvent(time::seconds(0), [this, announcementPtr] {
 //          m_appFaceImpl.satisfyPendingInterests(*announcementPtr);
 //        });
-    }
-
-    virtual void
-    sendHint(const Hint& hint)
-    {
-      NS_LOG_DEBUG("<< Hint " << hint.getName());
-      shared_ptr<const Hint> hintPtr = hint.shared_from_this();
-//      m_appFaceImpl.m_scheduler.scheduleEvent(time::seconds(0), [this, hintPtr] {
-//          m_appFaceImpl.satisfyPendingInterests(*hintPtr);
-//        });
-    }
-
-    virtual void
-    sendVicinity(const Vicinity& vicinity)
-    {
-      NS_LOG_DEBUG("<< Vicinity " << vicinity.getName());
-      shared_ptr<const Vicinity> vicinityPtr = vicinity.shared_from_this();
-//      m_appFaceImpl.m_scheduler.scheduleEvent(time::seconds(0), [this, vicinityPtr] {
-//          m_appFaceImpl.satisfyPendingInterests(*vicinityPtr);
-//        });
-    }
-
-    virtual void
-    sendVicinityData(const VicinityData& vicinityData)
-    {
-      NS_LOG_DEBUG("<< VicinityData " << vicinityData.getName());
-      shared_ptr<const VicinityData> vicinityDataPtr = vicinityData.shared_from_this();
-//      m_appFaceImpl.m_scheduler.scheduleEvent(time::seconds(0), [this, vicinityDataPtr] {
-//          m_appFaceImpl.satisfyPendingInterests(*vicinityDataPtr);
-//        });
-    }
+//    }
 
     /** \brief Close the face
      *

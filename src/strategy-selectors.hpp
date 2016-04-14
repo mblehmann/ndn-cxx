@@ -21,8 +21,8 @@
  * @author Paulo R Lanzarin <prlanzarin@inf.ufrgs.br>
  */
 
-#ifndef NDN_REPLICATION_SELECTORS_HPP
-#define NDN_REPLICATION_SELECTORS_HPP
+#ifndef NDN_STRATEGY_SELECTORS_HPP
+#define NDN_STRATEGY_SELECTORS_HPP
 
 #include "common.hpp"
 #include "exclude.hpp"
@@ -30,9 +30,9 @@
 namespace ndn {
 
 /**
- * @brief Abstraction implementing Hint and Vicinity selectors
+ * @brief Abstraction implementing Strategy selectors
  */
-class ReplicationSelectors
+class StrategySelectors
 {
 public:
   class Error : public tlv::Error
@@ -45,13 +45,13 @@ public:
     }
   };
 
-  ReplicationSelectors();
+  StrategySelectors();
 
   /**
    * @brief Create from wire encoding
    */
   explicit
-  ReplicationSelectors(const Block& wire);
+  StrategySelectors(const Block& wire);
 
   bool
   empty() const;
@@ -78,13 +78,22 @@ public:
 public: // getters & setters for replication selectors
 
   int
-  getNodeID() const
+  getScope() const
   {
-    return m_nodeID;
+    return m_scope;
   }
 
-  ReplicationSelectors&
-  setNodeID(int nodeID); 
+  StrategySelectors&
+  setScope(int scope); 
+
+  int
+  getNodeId() const
+  {
+    return m_nodeId;
+  }
+
+  StrategySelectors&
+  setNodeId(int nodeId); 
 
   bool
   getInterested() const
@@ -92,7 +101,7 @@ public: // getters & setters for replication selectors
     return m_interested;
   }
 
-  ReplicationSelectors&
+  StrategySelectors&
   setInterested(bool interested); 
 
   int
@@ -101,21 +110,22 @@ public: // getters & setters for replication selectors
     return m_availability;
   }
 
-  ReplicationSelectors&
+  StrategySelectors&
   setAvailability(int availability);
 
 public: // EqualityComparable concept
   bool
-  operator==(const ReplicationSelectors& other) const;
+  operator==(const StrategySelectors& other) const;
 
   bool
-  operator!=(const ReplicationSelectors& other) const
+  operator!=(const StrategySelectors& other) const
   {
     return !this->operator==(other);
   }
 
 private:
-  int m_nodeID;
+  int m_scope;
+  int m_nodeId;
   bool m_interested;
   int m_availability;
 
@@ -124,4 +134,4 @@ private:
 
 } // namespace ndn
 
-#endif // NDN_REPLICATION_SELECTORS_HPP
+#endif // NDN_STRATEGY_SELECTORS_HPP

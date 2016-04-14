@@ -225,8 +225,15 @@ Interest::wireEncode(EncodingImpl<TAG>& encoder) const
   //                InterestLifetime?
   //                Link?
   //                SelectedDelegation?
+  //                StrategySelectors?
 
   // (reverse encoding)
+
+  // Strategy Selectors
+  if (hasStrategySelectors())
+    {
+      totalLength += getStrategySelectors().wireEncode(encoder);
+    }
 
   if (hasLink()) {
     if (hasSelectedDelegation()) {
@@ -304,6 +311,7 @@ Interest::wireDecode(const Block& wire)
   //                InterestLifetime?
   //                Link?
   //                SelectedDelegation?
+  //                StrategySelectors?
 
   if (m_wire.type() != tlv::Interest)
     BOOST_THROW_EXCEPTION(Error("Unexpected TLV number when decoding Interest"));
@@ -355,6 +363,16 @@ Interest::wireDecode(const Block& wire)
       BOOST_THROW_EXCEPTION(Error("Invalid selected delegation index when decoding Interest"));
     }
   }
+
+  // Selectors
+  val = m_wire.find(tlv::StrategySelectors);
+  if (val != m_wire.elements_end())
+    {
+      m_strategySelectors.wireDecode(*val);
+    }
+  else
+    m_strategySelectors = StrategySelectors();
+
 }
 
 bool
@@ -478,6 +496,23 @@ operator<<(std::ostream& os, const Interest& interest)
   }
   if (!interest.getExclude().empty()) {
     os << delim << "ndn.Exclude=" << interest.getExclude();
+    delim = '&';
+  }
+
+  if (interest.getScope() >= 0) {
+    os << delim << "ndn.Scope=" << interest.getScope();
+    delim = '&';
+  }
+  if (interest.getNodeId() >= 0) {
+    os << delim << "ndn.NodeId=" << interest.getNodeId();
+    delim = '&';
+  }
+  if (interest.getInterested()) {
+    os << delim << "ndn.Interested=" << interest.getInterested();
+    delim = '&';
+  }
+  if (interest.getAvailability() >= 0) {
+    os << delim << "ndn.Availability=" << interest.getAvailability();
     delim = '&';
   }
 
