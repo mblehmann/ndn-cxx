@@ -21,8 +21,8 @@
  * @author Paulo R Lanzarin <prlanzarin@inf.ufrgs.br>
  */
 
-#ifndef NDN_STRATEGY_SELECTORS_HPP
-#define NDN_STRATEGY_SELECTORS_HPP
+#ifndef PDRM_STRATEGY_SELECTORS_HPP
+#define PDRM_STRATEGY_SELECTORS_HPP
 
 #include "common.hpp"
 #include "exclude.hpp"
@@ -32,26 +32,26 @@ namespace ndn {
 /**
  * @brief Abstraction implementing Strategy selectors
  */
-class StrategySelectors
+class PDRMStrategySelectors
 {
 public:
-  class Error : public tlv::Error
+  class PDRMError : public tlv::Error
   {
   public:
     explicit
-    Error(const std::string& what)
+    PDRMError(const std::string& what)
       : tlv::Error(what)
     {
     }
   };
 
-  StrategySelectors();
+  PDRMStrategySelectors();
 
   /**
    * @brief Create from wire encoding
    */
   explicit
-  StrategySelectors(const Block& wire);
+  PDRMStrategySelectors(const Block& wire);
 
   bool
   empty() const;
@@ -77,61 +77,101 @@ public:
 
 public: // getters & setters for replication selectors
 
-  int
+  int32_t
   getScope() const
   {
     return m_scope;
   }
 
-  StrategySelectors&
-  setScope(int scope); 
+  PDRMStrategySelectors&
+  setScope(int32_t scope); 
 
-  int
+  int32_t
   getNodeId() const
   {
     return m_nodeId;
   }
 
-  StrategySelectors&
-  setNodeId(int nodeId); 
+  PDRMStrategySelectors&
+  setNodeId(int32_t nodeId); 
 
-  bool
-  getInterested() const
+  int32_t
+  getHomeNetwork() const
   {
-    return m_interested;
+    return m_homeNetwork;
   }
 
-  StrategySelectors&
-  setInterested(bool interested); 
+  PDRMStrategySelectors&
+  setHomeNetwork(int32_t homeNetowk);
 
-  int
+  int32_t
+  getPreferredLocation() const
+  {
+    return m_preferredLocation;
+  }
+
+  PDRMStrategySelectors&
+  setPreferredLocation(int32_t preferredLocation); 
+
+  double
+  getTimeSpentAtPreferredLocation() const
+  {
+    return m_timeSpentAtPreferredLocation;
+  }
+
+  PDRMStrategySelectors&
+  setTimeSpentAtPreferredLocation(double timeSpentAtPreferredLocation);
+
+  int32_t
+  getCurrentPosition() const
+  {
+    return m_currentPosition;
+  }
+
+  PDRMStrategySelectors&
+  setCurrentPosition(int32_t currentPosition); 
+
+  double
   getAvailability() const
   {
     return m_availability;
   }
 
-  StrategySelectors&
-  setAvailability(int availability);
+  PDRMStrategySelectors&
+  setAvailability(double availability);
+
+  bool
+  getInterest() const
+  {
+    return m_interest;
+  }
+
+  PDRMStrategySelectors&
+  setInterest(bool interest);
 
 public: // EqualityComparable concept
   bool
-  operator==(const StrategySelectors& other) const;
+  operator==(const PDRMStrategySelectors& other) const;
 
   bool
-  operator!=(const StrategySelectors& other) const
+  operator!=(const PDRMStrategySelectors& other) const
   {
     return !this->operator==(other);
   }
 
 private:
-  int m_scope;
-  int m_nodeId;
-  bool m_interested;
-  int m_availability;
+  int32_t m_scope;
+  int32_t m_nodeId;
+  int32_t m_homeNetwork;
+  int32_t m_preferredLocation;
+  double m_timeSpentAtPreferredLocation;
+  int32_t m_currentPosition;
+  double m_availability;
+  bool m_interest;
 
   mutable Block m_wire;
 };
 
 } // namespace ndn
 
-#endif // NDN_STRATEGY_SELECTORS_HPP
+#endif // PDRM_STRATEGY_SELECTORS_HPP

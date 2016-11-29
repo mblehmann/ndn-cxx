@@ -303,6 +303,14 @@ public:
   Data&
   setCachingPolicy(nfd::LocalControlHeader::CachingPolicy cachingPolicy);
 
+  /* PDRM Change */
+  Data&
+  setUnsolicited(const bool& unsolicited);
+
+  bool
+  getUnsolicited() const;
+  /* PDRM Change */
+
 public: // EqualityComparable concept
   bool
   operator==(const Data& other) const;
@@ -322,6 +330,9 @@ private:
   MetaInfo m_metaInfo;
   mutable Block m_content;
   Signature m_signature;
+  /* PDRM Change */
+  bool m_unsolicited;
+  /* PDRM Change */
 
   mutable Block m_wire;
   mutable Name m_fullName;
@@ -398,6 +409,14 @@ Data::getCachingPolicy() const
 {
   return getLocalControlHeader().getCachingPolicy();
 }
+
+/* PDRM Change */
+inline bool
+Data::getUnsolicited() const
+{
+  return m_unsolicited;
+}
+/* PDRM Change */
 
 } // namespace ndn
 

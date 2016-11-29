@@ -93,15 +93,6 @@ public: // getters & setters
   FaceStatus&
   setNInDatas(uint64_t nInDatas);
 
-//  uint64_t
-//  getNInAnnouncements() const
-//  {
-//   return m_nInAnnouncements;
-//  }
-
-//  FaceStatus&
-//  setNInAnnouncements(uint64_t nInAnnouncements);
-
   uint64_t
   getNOutInterests() const
   {
@@ -119,15 +110,6 @@ public: // getters & setters
 
   FaceStatus&
   setNOutDatas(uint64_t nOutDatas);
-
-//  uint64_t
-//  getNOutAnnouncements() const
-//  {
-//    return m_nOutAnnouncements;
-//  }
-
-//  FaceStatus&
-//  setNOutAnnouncements(uint64_t nOutAnnouncements);
 
   uint64_t
   getNInBytes() const
@@ -156,10 +138,8 @@ private:
   bool m_hasExpirationPeriod;
   uint64_t m_nInInterests;
   uint64_t m_nInDatas;
-//  uint64_t m_nInAnnouncements;
   uint64_t m_nOutInterests;
   uint64_t m_nOutDatas;
-//  uint64_t m_nOutAnnouncements;
   uint64_t m_nInBytes;
   uint64_t m_nOutBytes;
 

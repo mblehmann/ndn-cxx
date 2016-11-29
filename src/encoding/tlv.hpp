@@ -88,11 +88,16 @@ enum {
   LinkDelegation = 31,
   SelectedDelegation = 32,
 
-  StrategySelectors = 40,
-  Scope             = 41,
-  NodeId            = 42,
-  Interested        = 43,
-  Availability      = 44,
+  PDRMStrategySelectors            = 40,
+  PDRMScope                        = 41,
+  PDRMNodeId                       = 42,
+  PDRMHomeNetwork                  = 43,
+  PDRMPreferredLocation            = 44,
+  PDRMTimeSpentAtPreferredLocation = 45,
+  PDRMCurrentPosition              = 46,
+  PDRMAvailability                 = 47,
+  PDRMInterest                     = 48,
+  PDRMUnsolicited                  = 49,
 
   AppPrivateBlock1 = 128,
   AppPrivateBlock2 = 32767

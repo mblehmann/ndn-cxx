@@ -37,10 +37,8 @@ FaceStatus::FaceStatus()
   : m_hasExpirationPeriod(false)
   , m_nInInterests(0)
   , m_nInDatas(0)
-//  , m_nInAnnouncements(0)
   , m_nOutInterests(0)
   , m_nOutDatas(0)
-//  , m_nOutAnnouncements(0)
   , m_nInBytes(0)
   , m_nOutBytes(0)
 {
@@ -61,14 +59,10 @@ FaceStatus::wireEncode(EncodingImpl<TAG>& encoder) const
                  tlv::nfd::NOutBytes, m_nOutBytes);
   totalLength += prependNonNegativeIntegerBlock(encoder,
                  tlv::nfd::NInBytes, m_nInBytes);
-//  totalLength += prependNonNegativeIntegerBlock(encoder,
-//                 tlv::nfd::NOutAnnouncements, m_nOutAnnouncements);
   totalLength += prependNonNegativeIntegerBlock(encoder,
                  tlv::nfd::NOutDatas, m_nOutDatas);
   totalLength += prependNonNegativeIntegerBlock(encoder,
                  tlv::nfd::NOutInterests, m_nOutInterests);
-//  totalLength += prependNonNegativeIntegerBlock(encoder,
-//                 tlv::nfd::NInAnnouncements, m_nInAnnouncements);
   totalLength += prependNonNegativeIntegerBlock(encoder,
                  tlv::nfd::NInDatas, m_nInDatas);
   totalLength += prependNonNegativeIntegerBlock(encoder,
@@ -201,14 +195,6 @@ FaceStatus::wireDecode(const Block& block)
     BOOST_THROW_EXCEPTION(Error("missing required NInDatas field"));
   }
 
-//  if (val != m_wire.elements_end() && val->type() == tlv::nfd::NInAnnouncements) {
-//    m_nInAnnouncements = readNonNegativeInteger(*val);
-//    ++val;
-//  }
-//  else {
-//    BOOST_THROW_EXCEPTION(Error("missing required NInAnnouncements field"));
-//  }
-
   if (val != m_wire.elements_end() && val->type() == tlv::nfd::NOutInterests) {
     m_nOutInterests = readNonNegativeInteger(*val);
     ++val;
@@ -224,14 +210,6 @@ FaceStatus::wireDecode(const Block& block)
   else {
     BOOST_THROW_EXCEPTION(Error("missing required NOutDatas field"));
   }
-
-//  if (val != m_wire.elements_end() && val->type() == tlv::nfd::NOutAnnouncements) {
-//    m_nOutAnnouncements = readNonNegativeInteger(*val);
-//    ++val;
-// }
-//  else {
-//    BOOST_THROW_EXCEPTION(Error("missing required NOutAnnouncements field"));
-//  }
 
   if (val != m_wire.elements_end() && val->type() == tlv::nfd::NInBytes) {
     m_nInBytes = readNonNegativeInteger(*val);
@@ -275,14 +253,6 @@ FaceStatus::setNInDatas(uint64_t nInDatas)
   return *this;
 }
 
-//FaceStatus&
-//FaceStatus::setNInAnnouncements(uint64_t nInAnnouncements)
-//{
-//  m_wire.reset();
-//  m_nInAnnouncements = nInAnnouncements;
-//  return *this;
-//}
-
 FaceStatus&
 FaceStatus::setNOutInterests(uint64_t nOutInterests)
 {
@@ -298,14 +268,6 @@ FaceStatus::setNOutDatas(uint64_t nOutDatas)
   m_nOutDatas = nOutDatas;
   return *this;
 }
-
-//FaceStatus&
-//FaceStatus::setNOutAnnouncements(uint64_t nOutAnnouncements)
-//{
-//  m_wire.reset();
-//  m_nOutAnnouncements = nOutAnnouncements;
-//  return *this;
-//}
 
 FaceStatus&
 FaceStatus::setNInBytes(uint64_t nInBytes)
@@ -351,8 +313,6 @@ operator<<(std::ostream& os, const FaceStatus& status)
      << "out: " << status.getNOutInterests() << "},\n"
      << "            Data: {in: " << status.getNInDatas() << ", "
      << "out: " << status.getNOutDatas() << "},\n"
-//     << "            Announcement: {in: " << status.getNInAnnouncements() << ", "
-//     << "out: " << status.getNOutAnnouncements() << "},\n"
      << "            bytes: {in: " << status.getNInBytes() << ", "
      << "out: " << status.getNOutBytes() << "} }\n"
      << ")";

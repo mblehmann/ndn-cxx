@@ -30,7 +30,7 @@
 #include "management/nfd-local-control-header.hpp"
 #include "tag-host.hpp"
 #include "link.hpp"
-#include "strategy-selectors.hpp"
+#include "pdrm-strategy-selectors.hpp"
 
 namespace ndn {
 
@@ -428,77 +428,133 @@ public: // Strategy Selectors
    * @return true if Interest has any strategy selector present
    */
   bool
-  hasStrategySelectors() const
+  hasPDRMStrategySelectors() const
   {
-    return !m_strategySelectors.empty();
+    return !m_PDRMStrategySelectors.empty();
   }
 
-  const StrategySelectors&
-  getStrategySelectors() const
+  const PDRMStrategySelectors&
+  getPDRMStrategySelectors() const
   {
-    return m_strategySelectors;
+    return m_PDRMStrategySelectors;
   }
 
   Interest&
-  setStrategySelectors(const StrategySelectors& strategySelectors)
+  setPDRMStrategySelectors(const PDRMStrategySelectors& PDRMStrategySelectors)
   {
-    m_strategySelectors = strategySelectors;
+    m_PDRMStrategySelectors = PDRMStrategySelectors;
     m_wire.reset();
     return *this;
   }
 
-  int
+  int32_t
   getScope() const
   {
-    return m_strategySelectors.getScope();
+    return m_PDRMStrategySelectors.getScope();
   }
 
   Interest&
-  setScope(int scope)
+  setScope(int32_t scope)
   {
-    m_strategySelectors.setScope(scope);
+    m_PDRMStrategySelectors.setScope(scope);
     m_wire.reset();
     return *this;
   }
 
-  int
+  int32_t
   getNodeId() const
   {
-    return m_strategySelectors.getNodeId();
+    return m_PDRMStrategySelectors.getNodeId();
   }
 
   Interest&
-  setNodeId(int nodeId)
+  setNodeId(int32_t nodeId)
   {
-    m_strategySelectors.setNodeId(nodeId);
+    m_PDRMStrategySelectors.setNodeId(nodeId);
+    m_wire.reset();
+    return *this;
+  }
+
+  int32_t
+  getHomeNetwork() const
+  {
+    return m_PDRMStrategySelectors.getHomeNetwork();
+  }
+
+  Interest&
+  setHomeNetwork(int32_t homeNetwork)
+  {
+    m_PDRMStrategySelectors.setHomeNetwork(homeNetwork);
+    m_wire.reset();
+    return *this;
+  }
+
+  int32_t
+  getPreferredLocation() const
+  {
+    return m_PDRMStrategySelectors.getPreferredLocation();
+  }
+
+  Interest&
+  setPreferredLocation(int32_t preferredLocation)
+  {
+    m_PDRMStrategySelectors.setPreferredLocation(preferredLocation);
+    m_wire.reset();
+    return *this;
+  }
+
+  double
+  getTimeSpentAtPreferredLocation() const
+  {
+    return m_PDRMStrategySelectors.getTimeSpentAtPreferredLocation();
+  }
+
+  Interest&
+  setTimeSpentAtPreferredLocation(double timeSpentAtPreferredLocation)
+  {
+    m_PDRMStrategySelectors.setTimeSpentAtPreferredLocation(timeSpentAtPreferredLocation);
+    m_wire.reset();
+    return *this;
+  }
+
+  int32_t
+  getCurrentPosition() const
+  {
+    return m_PDRMStrategySelectors.getCurrentPosition();
+  }
+
+  Interest&
+  setCurrentPosition(int32_t currentPosition)
+  {
+    m_PDRMStrategySelectors.setCurrentPosition(currentPosition);
+    m_wire.reset();
+    return *this;
+  }
+
+  double
+  getAvailability() const
+  {
+    return m_PDRMStrategySelectors.getAvailability();
+  }
+
+  Interest&
+  setAvailability(double availability)
+  {
+    m_PDRMStrategySelectors.setAvailability(availability);
     m_wire.reset();
     return *this;
   }
 
   bool
-  getInterested() const
+  getInterest() const
   {
-    return m_strategySelectors.getInterested();
+    return m_PDRMStrategySelectors.getInterest();
   }
 
   Interest&
-  setInterested(bool interested)
+  setInterest(bool interested)
   {
-    m_strategySelectors.setInterested(interested);
-    m_wire.reset();
-    return *this;
-  }
-
-  int
-  getAvailability() const
-  {
-    return m_strategySelectors.getAvailability();
-  }
-
-  Interest&
-  setAvailability(int availability)
-  {
-    m_strategySelectors.setAvailability(availability);
+    m_PDRMStrategySelectors.setInterest(interested);
     m_wire.reset();
     return *this;
   }
@@ -521,7 +577,7 @@ private:
   Selectors m_selectors;
   mutable Block m_nonce;
   time::milliseconds m_interestLifetime;
-  StrategySelectors m_strategySelectors;
+  PDRMStrategySelectors m_PDRMStrategySelectors;
 
   mutable Block m_link;
   size_t m_selectedDelegationIndex;

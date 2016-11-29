@@ -92,16 +92,6 @@ public:
         });
     }
 
-//    virtual void
-//    sendAnnouncement(const Announcement& announcement)
-//    {
-//      NS_LOG_DEBUG("<< Announcement " << announcement.getName());
-//      shared_ptr<const Announcement> announcementPtr = announcement.shared_from_this();
-//      m_appFaceImpl.m_scheduler.scheduleEvent(time::seconds(0), [this, announcementPtr] {
-//          m_appFaceImpl.satisfyPendingInterests(*announcementPtr);
-//        });
-//    }
-
     /** \brief Close the face
      *
      *  This terminates all communication on the face and cause

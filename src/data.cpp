@@ -34,11 +34,13 @@ static_assert(std::is_base_of<tlv::Error, Data::Error>::value,
 
 Data::Data()
   : m_content(tlv::Content) // empty content
+  , m_unsolicited(false)
 {
 }
 
 Data::Data(const Name& name)
   : m_name(name)
+  , m_unsolicited(false)
 {
 }
 
@@ -57,6 +59,9 @@ Data::wireEncode(EncodingImpl<TAG>& encoder, bool unsignedPortion/* = false*/) c
   //            Name
   //            MetaInfo
   //            Content
+  /* PDRM Change */
+  //            Unsolicited
+  /* PDRM Change */
   //            Signature
 
   // (reverse encoding)
@@ -74,6 +79,12 @@ Data::wireEncode(EncodingImpl<TAG>& encoder, bool unsignedPortion/* = false*/) c
 
   // SignatureInfo
   totalLength += encoder.prependBlock(m_signature.getInfo());
+
+  /* PDRM Change */
+  if (getUnsolicited()) {
+    totalLength += prependEmptyBlock(encoder, tlv::PDRMUnsolicited);
+  }
+  /* PDRM Change */
 
   // Content
   totalLength += encoder.prependBlock(getContent());
@@ -142,6 +153,9 @@ Data::wireDecode(const Block& wire)
   //            Name
   //            MetaInfo
   //            Content
+  /* PDRM Change */
+  //            Unsolicited
+  /* PDRM Change */
   //            Signature
 
   // Name
@@ -153,6 +167,13 @@ Data::wireDecode(const Block& wire)
   // Content
   m_content = m_wire.get(tlv::Content);
 
+  /* PDRM Change */
+  Block::element_const_iterator val = m_wire.find(tlv::PDRMUnsolicited);
+  if (val != m_wire.elements_end()) {
+    m_unsolicited = true;
+  }
+  /* PDRM Change */
+
   ///////////////
   // Signature //
   ///////////////
@@ -161,7 +182,7 @@ Data::wireDecode(const Block& wire)
   m_signature.setInfo(m_wire.get(tlv::SignatureInfo));
 
   // SignatureValue
-  Block::element_const_iterator val = m_wire.find(tlv::SignatureValue);
+  val = m_wire.find(tlv::SignatureValue);
   if (val != m_wire.elements_end())
     m_signature.setValue(*val);
 }
@@ -309,6 +330,16 @@ Data::setCachingPolicy(nfd::LocalControlHeader::CachingPolicy cachingPolicy)
   return *this;
 }
 
+/* PDRM Change */
+Data&
+Data::setUnsolicited(const bool& unsolicited)
+{
+  m_unsolicited = unsolicited;
+
+  return *this;
+}
+/* PDRM Change */
+
 void
 Data::onChanged()
 {
@@ -342,6 +373,9 @@ operator<<(std::ostream& os, const Data& data)
   os << "Name: " << data.getName() << "\n";
   os << "MetaInfo: " << data.getMetaInfo() << "\n";
   os << "Content: (size: " << data.getContent().value_size() << ")\n";
+  /* PDRM Change */
+  os << "Unsolicited: " << data.getUnsolicited() << "\n";
+  /* PDRM Change */
   os << "Signature: (type: " << data.getSignature().getType() <<
     ", value_length: "<< data.getSignature().getValue().value_size() << ")";
   os << std::endl;

@@ -164,15 +164,6 @@ public: // getters & setters
   ForwarderStatus&
   setNInDatas(uint64_t nInDatas);
 
-//  uint64_t
-//  getNInAnnouncements() const
-//  {
-//    return m_nInAnnouncements;
-//  }
-
-//  ForwarderStatus&
-//  setNInAnnouncements(uint64_t nInAnnouncements);
-
   uint64_t
   getNOutInterests() const
   {
@@ -191,15 +182,6 @@ public: // getters & setters
   ForwarderStatus&
   setNOutDatas(uint64_t nOutDatas);
 
-//  uint64_t
-//  getNOutAnnouncements() const
-//  {
-//    return m_nOutAnnouncements;
-//  }
-
-//  ForwarderStatus&
-//  setNOutAnnouncements(uint64_t nOutAnnouncements);
-
 private:
   std::string m_nfdVersion;
   time::system_clock::TimePoint m_startTimestamp;
@@ -211,10 +193,8 @@ private:
   size_t m_nCsEntries;
   uint64_t m_nInInterests;
   uint64_t m_nInDatas;
-//  uint64_t m_nInAnnouncements;
   uint64_t m_nOutInterests;
   uint64_t m_nOutDatas;
-//  uint64_t m_nOutAnnouncements;
 
   mutable Block m_wire;
 };

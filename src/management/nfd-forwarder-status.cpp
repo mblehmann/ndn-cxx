@@ -43,10 +43,8 @@ ForwarderStatus::ForwarderStatus()
   , m_nCsEntries(0)
   , m_nInInterests(0)
   , m_nInDatas(0)
-//  , m_nInAnnouncements(0)
   , m_nOutInterests(0)
   , m_nOutDatas(0)
-//  , m_nOutAnnouncements(0)
 {
 }
 
@@ -61,14 +59,10 @@ ForwarderStatus::wireEncode(EncodingImpl<TAG>& encoder) const
 {
   size_t totalLength = 0;
 
-//  totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NOutAnnouncements,
-//                                                m_nOutAnnouncements);
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NOutDatas,
                                                 m_nOutDatas);
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NOutInterests,
                                                 m_nOutInterests);
-//  totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NInAnnouncements,
-//                                                m_nInAnnouncements);
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NInDatas,
                                                 m_nInDatas);
   totalLength += prependNonNegativeIntegerBlock(encoder, tlv::nfd::NInInterests,
@@ -208,14 +202,6 @@ ForwarderStatus::wireDecode(const Block& block)
     BOOST_THROW_EXCEPTION(Error("missing required NInDatas field"));
   }
 
-//  if (val != m_wire.elements_end() && val->type() == tlv::nfd::NInAnnouncements) {
-//    m_nInAnnouncements = static_cast<uint64_t>(readNonNegativeInteger(*val));
-//    ++val;
-//  }
-//  else {
-//    BOOST_THROW_EXCEPTION(Error("missing required NInAnnouncements field"));
-//  }
-
   if (val != m_wire.elements_end() && val->type() == tlv::nfd::NOutInterests) {
     m_nOutInterests = static_cast<uint64_t>(readNonNegativeInteger(*val));
     ++val;
@@ -231,14 +217,6 @@ ForwarderStatus::wireDecode(const Block& block)
   else {
     BOOST_THROW_EXCEPTION(Error("missing required NOutDatas field"));
   }
-
-//  if (val != m_wire.elements_end() && val->type() == tlv::nfd::NOutAnnouncements) {
-//    m_nOutAnnouncements = static_cast<uint64_t>(readNonNegativeInteger(*val));
-//    ++val;
-//  }
-//  else {
-//    BOOST_THROW_EXCEPTION(Error("missing required NOutAnnouncements field"));
-//  }
 
 }
 
@@ -322,14 +300,6 @@ ForwarderStatus::setNInDatas(uint64_t nInDatas)
   return *this;
 }
 
-//ForwarderStatus&
-//ForwarderStatus::setNInAnnouncements(uint64_t nInAnnouncements)
-//{
-//  m_wire.reset();
-//  m_nInAnnouncements = nInAnnouncements;
-//  return *this;
-//}
-
 ForwarderStatus&
 ForwarderStatus::setNOutInterests(uint64_t nOutInterests)
 {
@@ -345,14 +315,6 @@ ForwarderStatus::setNOutDatas(uint64_t nOutDatas)
   m_nOutDatas = nOutDatas;
   return *this;
 }
-
-//ForwarderStatus&
-//ForwarderStatus::setNOutAnnouncements(uint64_t nOutAnnouncements)
-//{
-//  m_wire.reset();
-//  m_nOutAnnouncements = nOutAnnouncements;
-//  return *this;
-//}
 
 } // namespace nfd
 } // namespace ndn

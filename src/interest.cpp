@@ -225,14 +225,14 @@ Interest::wireEncode(EncodingImpl<TAG>& encoder) const
   //                InterestLifetime?
   //                Link?
   //                SelectedDelegation?
-  //                StrategySelectors?
+  //                PDRMStrategySelectors?
 
   // (reverse encoding)
 
   // Strategy Selectors
-  if (hasStrategySelectors())
+  if (hasPDRMStrategySelectors())
     {
-      totalLength += getStrategySelectors().wireEncode(encoder);
+      totalLength += getPDRMStrategySelectors().wireEncode(encoder);
     }
 
   if (hasLink()) {
@@ -311,7 +311,7 @@ Interest::wireDecode(const Block& wire)
   //                InterestLifetime?
   //                Link?
   //                SelectedDelegation?
-  //                StrategySelectors?
+  //                PDRMStrategySelectors?
 
   if (m_wire.type() != tlv::Interest)
     BOOST_THROW_EXCEPTION(Error("Unexpected TLV number when decoding Interest"));
@@ -365,13 +365,13 @@ Interest::wireDecode(const Block& wire)
   }
 
   // Selectors
-  val = m_wire.find(tlv::StrategySelectors);
+  val = m_wire.find(tlv::PDRMStrategySelectors);
   if (val != m_wire.elements_end())
     {
-      m_strategySelectors.wireDecode(*val);
+      m_PDRMStrategySelectors.wireDecode(*val);
     }
   else
-    m_strategySelectors = StrategySelectors();
+    m_PDRMStrategySelectors = PDRMStrategySelectors();
 
 }
 
@@ -507,12 +507,28 @@ operator<<(std::ostream& os, const Interest& interest)
     os << delim << "ndn.NodeId=" << interest.getNodeId();
     delim = '&';
   }
-  if (interest.getInterested()) {
-    os << delim << "ndn.Interested=" << interest.getInterested();
+  if (interest.getHomeNetwork() >= 0) {
+    os << delim << "ndn.HomeNetwork=" << interest.getHomeNetwork();
+    delim = '&';
+  }
+  if (interest.getPreferredLocation() >= 0) {
+    os << delim << "ndn.PreferredLocation=" << interest.getPreferredLocation();
+    delim = '&';
+  }
+  if (interest.getTimeSpentAtPreferredLocation() >= 0) {
+    os << delim << "ndn.TimeSpentAtPreferredLocation=" << interest.getTimeSpentAtPreferredLocation();
+    delim = '&';
+  }
+  if (interest.getCurrentPosition() >= 0) {
+    os << delim << "ndn.CurrentPosition=" << interest.getCurrentPosition();
     delim = '&';
   }
   if (interest.getAvailability() >= 0) {
     os << delim << "ndn.Availability=" << interest.getAvailability();
+    delim = '&';
+  }
+  if (interest.getInterest()) {
+    os << delim << "ndn.Interest=" << interest.getInterest();
     delim = '&';
   }
 
